@@ -25,7 +25,7 @@ Reading them will help a lot.
 
 Run these from PowerShell in order:
 
-1. `Set-Location C:\hexagonal_life_engine`
+1. `Set-Location C:\hexagonal_life_engine`(assuming the repo is cloned and placed in the C drive of your device)
 2. `Get-Content .\notes\Overview.md`
 3. `Get-Content .\notes\Project Brief The Life Engine Hex.md`
 4. `Get-Content .\notes\Checklist\Laptop And Project Setup.md`
