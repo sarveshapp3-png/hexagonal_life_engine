@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "seed": 1337,
+  "cells": [
+    { "q": 0, "r": 0, "kind": "Mover", "age": 0 },
+    { "q": 1, "r": 0, "kind": "Producer", "age": 0 },
+    { "q": 1, "r": -1, "kind": "Food", "age": 0 },
+    { "q": 0, "r": -1, "kind": "Wall", "age": 0 },
+    { "q": -1, "r": 0, "kind": "Killer", "age": 0 },
+    { "q": -1, "r": 1, "kind": "Armor", "age": 0 },
+    { "q": 0, "r": 1, "kind": "Eye", "age": 0 },
+    { "q": 2, "r": -1, "kind": "Mouth", "age": 0 }
+  ]
+}
+

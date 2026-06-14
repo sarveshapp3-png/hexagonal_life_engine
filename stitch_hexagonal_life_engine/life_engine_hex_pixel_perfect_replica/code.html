@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>THE LIFE ENGINE - Simulation Console</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&amp;family=Inter:wght@400;500&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        /* Hexagonal Grid Background simulation */
+        .hex-grid {
+            background-color: #081425;
+            background-image:  
+                linear-gradient(30deg, #1e293b 12%, transparent 12.5%, transparent 87%, #1e293b 87.5%, #1e293b),
+                linear-gradient(150deg, #1e293b 12%, transparent 12.5%, transparent 87%, #1e293b 87.5%, #1e293b),
+                linear-gradient(30deg, #1e293b 12%, transparent 12.5%, transparent 87%, #1e293b 87.5%, #1e293b),
+                linear-gradient(150deg, #1e293b 12%, transparent 12.5%, transparent 87%, #1e293b 87.5%, #1e293b),
+                linear-gradient(60deg, #334155 25%, transparent 25.5%, transparent 75%, #334155 75%, #334155),
+                linear-gradient(60deg, #334155 25%, transparent 25.5%, transparent 75%, #334155 75%, #334155);
+            background-size: 40px 70px;
+            background-position: 0 0, 0 0, 20px 35px, 20px 35px, 0 0, 20px 35px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+
+        @keyframes neon-pulse {
+            0%, 100% { opacity: 1; filter: drop-shadow(0 0 2px #4be277); }
+            50% { opacity: 0.8; filter: drop-shadow(0 0 8px #4be277); }
+        }
+        .cell-active { animation: neon-pulse 2s infinite ease-in-out; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "outline": "#869585",
+                        "surface-tint": "#4ae176",
+                        "tertiary-fixed-dim": "#eec200",
+                        "outline-variant": "#3d4a3d",
+                        "primary-fixed": "#6bff8f",
+                        "neon-yellow": "#facc15",
+                        "neon-pink": "#f472b6",
+                        "neon-green": "#22c55e",
+                        "background": "#081425",
+                        "surface-overlay": "#334155",
+                        "surface-bg": "#0f172a",
+                        "surface-container": "#1e293b",
+                        "surface-dim": "#081425",
+                        "inverse-on-surface": "#263143",
+                        "on-secondary-fixed-variant": "#85145a",
+                        "surface-container-lowest": "#040e1f",
+                        "on-secondary": "#620040",
+                        "primary": "#4be277",
+                        "on-primary-fixed": "#002109",
+                        "surface-bright": "#2f3a4c",
+                        "error-container": "#93000a",
+                        "error": "#ffb4ab",
+                        "on-tertiary-container": "#4f3e00",
+                        "surface-container-highest": "#2a3548",
+                        "on-error": "#690005",
+                        "data-red": "#ef4444",
+                        "on-tertiary": "#3c2f00",
+                        "secondary-fixed-dim": "#ffafd3",
+                        "on-surface": "#d8e3fb",
+                        "tertiary": "#f0c300",
+                        "surface-container-high": "#1f2a3c",
+                        "secondary-container": "#85145a",
+                        "inverse-surface": "#d8e3fb",
+                        "tertiary-container": "#cfa800",
+                        "on-primary-fixed-variant": "#005321",
+                        "tertiary-fixed": "#ffe083",
+                        "on-secondary-fixed": "#3d0026",
+                        "on-tertiary-fixed": "#231b00",
+                        "on-surface-variant": "#bccbb9",
+                        "surface": "#081425",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "secondary": "#ffafd3",
+                        "surface-variant": "#2a3548",
+                        "on-primary-container": "#004b1e",
+                        "primary-fixed-dim": "#4ae176",
+                        "on-primary": "#003915",
+                        "surface-container-low": "#111c2d",
+                        "primary-container": "#22c55e",
+                        "neon-cyan": "#22d3ee",
+                        "on-background": "#d8e3fb",
+                        "action-blue": "#22d3ee",
+                        "stats-blue": "#4be277",
+                        "mutation-pink": "#f472b6"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    spacing: {
+                        "margin-desktop": "32px",
+                        "base": "4px",
+                        "gutter-xs": "8px",
+                        "gutter-md": "16px",
+                        "panel-gap": "12px",
+                        "margin-mobile": "16px",
+                        "sidebar-width": "280px",
+                        "panel-padding": "16px",
+                        "stack-gap": "8px"
+                    },
+                    fontFamily: {
+                        "label-sm": ["JetBrains Mono"],
+                        "label-md": ["JetBrains Mono"],
+                        "label-caps": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary selection:text-on-primary-container">
+<!-- Top App Bar -->
+<header class="w-full top-0 sticky bg-background-deep dark:bg-background-deep border-b border-outline-variant flex items-center justify-between px-panel-padding h-14 w-full z-50">
+<div class="flex items-center gap-gutter-md">
+<span class="material-symbols-outlined text-action-blue" style="font-variation-settings: 'FILL' 1;">biotech</span>
+<img alt="THE LIFE ENGINE" class="h-6" src="https://lh3.googleusercontent.com/aida/AP1WRLvrgaQjR2F_1lN-JrzpS8ci_HffT_SwQfhnRITSfWAAanCpe4-AxinGnWfIDzZl2SE27IdDCHhNnW_PvBAVp2qMcuo2EcYtP-NK4OZXP_xfoyAtzrIHQrGEK85wtYJT5BD5Oup3Ci3lfjrC2YPEYt3r6aonr_KrWWHpWQXv7mMD6Z32pc6Rp2cwttRyxpgywSQNWat89gxY3nnrZlVUQ4m4BVZ0Ft36QLCbaPtmAcvmAYNTrfanHY4FJyHL"/>
+</div>
+<div class="hidden md:flex gap-6 items-center">
+<nav class="flex items-center gap-gutter-md">
+<a class="font-label-caps text-label-caps text-action-blue hover:text-text-bright transition-colors active:scale-95 duration-100" href="#">DASHBOARD</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-text-bright transition-colors active:scale-95 duration-100" href="#">SIMULATION</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-text-bright transition-colors active:scale-95 duration-100" href="#">COMMUNITY</a>
+</nav>
+<div class="h-6 w-px bg-outline-variant"></div>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-action-blue transition-colors">settings</button>
+</div>
+<!-- Mobile Community Button -->
+<button class="md:hidden flex items-center gap-2 bg-surface-container-high px-3 py-1 rounded-full text-label-md font-label-md">
+<span class="material-symbols-outlined text-sm">groups</span>
+            COMMUNITY
+        </button>
+</header>
+<main class="flex flex-col md:flex-row h-[calc(100vh-3.5rem)] overflow-hidden relative">
+<!-- Navigation Drawer (Sidebar) - Only visible on Desktop -->
+<aside class="hidden md:flex w-sidebar-width h-full flex-col gap-stack-gap p-panel-padding bg-surface-elevated dark:bg-surface-elevated border-r border-outline-variant shrink-0 overflow-y-auto custom-scrollbar">
+<div class="mb-gutter-md">
+<p class="font-label-caps text-label-caps text-mutation-pink tracking-widest mb-1">CONSOLE</p>
+<h2 class="font-headline-md text-headline-md text-on-surface">Simulation Console</h2>
+</div>
+<nav class="flex flex-col gap-1">
+<button class="flex items-center gap-3 px-4 py-3 bg-surface-container text-stats-blue border-l-2 border-stats-blue font-body-md text-body-md transition-all duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+<span>World Settings</span>
+</button>
+<button class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant font-body-md text-body-md transition-all duration-200">
+<span class="material-symbols-outlined">trending_up</span>
+<span>Evolution</span>
+</button>
+<button class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant font-body-md text-body-md transition-all duration-200">
+<span class="material-symbols-outlined">analytics</span>
+<span>Statistics</span>
+</button>
+<button class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant font-body-md text-body-md transition-all duration-200">
+<span class="material-symbols-outlined">category</span>
+<span>Species</span>
+</button>
+</nav>
+<div class="mt-auto pt-panel-padding">
+<div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/30">
+<p class="text-label-sm font-label-sm text-on-surface-variant mb-2">QUICK ACCESS STATS</p>
+<div class="space-y-2">
+<div class="flex justify-between">
+<span class="text-label-md font-label-md text-on-surface-variant">FPS:</span>
+<span class="text-label-md font-label-md text-primary">61.2</span>
+</div>
+<div class="flex justify-between">
+<span class="text-label-md font-label-md text-on-surface-variant">POP:</span>
+<span class="text-label-md font-label-md text-neon-cyan">1,248</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Simulation Canvas Area -->
+<div class="flex-grow flex flex-col relative overflow-hidden">
+<!-- Hexagonal Simulation Canvas Container -->
+<div class="relative flex-grow hex-grid overflow-hidden group">
+<!-- Background Shader Animation -->
+
+<!-- Floating Detail Panel (Left) -->
+<div class="absolute top-4 left-4 z-20 w-64 bg-surface-container/60 backdrop-blur-md border border-outline-variant/50 rounded-xl p-4 transition-all duration-300 opacity-90 hover:opacity-100">
+<div class="flex justify-between items-center mb-3">
+<h3 class="font-label-caps text-label-caps text-action-blue">Organism Details</h3>
+<span class="material-symbols-outlined text-sm text-on-surface-variant">info</span>
+</div>
+<div class="space-y-2 font-label-md text-label-md">
+<div class="flex flex-col">
+<span class="text-on-surface-variant text-[10px]">SPECIES NAME</span>
+<span class="text-mutation-pink">ghy21jppkb</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Cell count:</span>
+<span class="text-on-surface font-label-sm">4 cells</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Move Range:</span>
+<span class="text-on-surface font-label-sm">1.2u</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Mutation Rate:</span>
+<span class="text-neon-yellow font-label-sm">4.76%</span>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-outline-variant/30">
+<button class="w-full py-1 bg-surface-container-highest rounded text-label-sm font-label-sm hover:bg-surface-overlay transition-colors">TRACK SPECIMEN</button>
+</div>
+</div>
+<!-- Floating FPS Controls (Right) -->
+<div class="absolute top-4 right-4 z-20 flex flex-col gap-2 items-end">
+<div class="bg-surface-container/60 backdrop-blur-md border border-outline-variant/50 rounded-full pl-4 pr-1 py-1 flex items-center gap-3">
+<span class="text-label-md font-label-md text-on-surface">Target FPS: <span class="text-primary font-bold">60</span></span>
+<div class="flex gap-1">
+<button class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center hover:bg-primary hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-lg">play_arrow</span>
+</button>
+<button class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center hover:bg-error/20 hover:text-error transition-colors">
+<span class="material-symbols-outlined text-lg">refresh</span>
+</button>
+</div>
+</div>
+<button class="bg-surface-overlay border border-outline-variant/50 rounded-full px-4 py-1 text-label-sm font-label-sm hover:bg-surface-bright transition-colors">
+                        BRUSH SIZE: 4
+                    </button>
+</div>
+<!-- Visual Organism Cluster Center -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<!-- This div represents where the complex hexagonal organisms would live in the simulation -->
+<div class="relative w-96 h-96">
+<div class="absolute top-1/4 left-1/3 w-12 h-12 bg-primary/40 rounded-full blur-2xl cell-active"></div>
+<div class="absolute bottom-1/4 right-1/4 w-16 h-16 bg-neon-cyan/30 rounded-full blur-3xl cell-active"></div>
+<div class="absolute top-1/2 right-1/2 w-8 h-8 bg-mutation-pink/40 rounded-full blur-xl cell-active"></div>
+</div>
+</div>
+</div>
+<!-- Bottom Evolution Controls Panel -->
+<section class="h-64 bg-surface-container-low border-t border-outline-variant/50 p-4 overflow-y-auto custom-scrollbar">
+<div class="max-w-6xl mx-auto">
+<div class="flex items-center justify-between mb-4">
+<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">analytics</span>
+                            Evolution Controls
+                        </h2>
+<div class="flex gap-2">
+<button class="px-3 py-1 bg-surface-container-highest rounded text-label-sm font-label-sm hover:bg-surface-overlay transition-colors">RESET ALL</button>
+<button class="px-3 py-1 bg-primary text-on-primary-container rounded text-label-sm font-label-sm font-bold shadow-lg shadow-primary/10">SAVE WORLD</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Food & Lifespan -->
+<div class="space-y-4">
+<div>
+<label class="flex justify-between text-label-md font-label-md text-on-surface-variant mb-2">
+<span>Prob. of producing food</span>
+<span class="text-primary">5%</span>
+</label>
+<input class="w-full h-1 bg-surface-variant rounded-lg appearance-none cursor-pointer accent-primary" type="range" value="5"/>
+</div>
+<div>
+<label class="flex justify-between text-label-md font-label-md text-on-surface-variant mb-2">
+<span>Lifespan multiplier</span>
+<span class="text-primary">100x</span>
+</label>
+<input class="w-full h-1 bg-surface-variant rounded-lg appearance-none cursor-pointer accent-primary" type="range" value="100"/>
+</div>
+<label class="flex items-center gap-2 text-label-md font-label-md text-on-surface-variant cursor-pointer group">
+<input checked="" class="rounded border-outline-variant bg-surface-container-highest text-primary focus:ring-0 focus:ring-offset-0" type="checkbox"/>
+<span class="group-hover:text-on-surface transition-colors">Rotation Enabled</span>
+</label>
+</div>
+<!-- Vision & Survival -->
+<div class="space-y-4">
+<div>
+<label class="flex justify-between text-label-md font-label-md text-on-surface-variant mb-2">
+<span>Look range</span>
+<span class="text-neon-cyan">30 units</span>
+</label>
+<input class="w-full h-1 bg-surface-variant rounded-lg appearance-none cursor-pointer accent-neon-cyan" type="range" value="30"/>
+</div>
+<div class="grid grid-cols-1 gap-2">
+<label class="flex items-center gap-2 text-label-md font-label-md text-on-surface-variant cursor-pointer group">
+<input class="rounded border-outline-variant bg-surface-container-highest text-neon-cyan focus:ring-0 focus:ring-offset-0" type="checkbox"/>
+<span class="group-hover:text-on-surface transition-colors">See through self</span>
+</label>
+<label class="flex items-center gap-2 text-label-md font-label-md text-on-surface-variant cursor-pointer group">
+<input checked="" class="rounded border-outline-variant bg-surface-container-highest text-neon-cyan focus:ring-0 focus:ring-offset-0" type="checkbox"/>
+<span class="group-hover:text-on-surface transition-colors">Independent eye decisions</span>
+</label>
+</div>
+</div>
+<!-- Mutation Rates -->
+<div class="bg-surface-container-high/40 p-4 rounded-xl border border-outline-variant/30">
+<p class="text-label-caps font-label-caps text-mutation-pink mb-3">GLOBAL MUTATION RATE</p>
+<div class="flex items-end gap-3 mb-4">
+<span class="text-headline-md font-headline-md leading-none text-on-surface">4.76</span>
+<span class="text-label-md font-label-md text-on-surface-variant pb-1">% per tick</span>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-center text-label-sm font-label-sm">
+<span class="text-on-surface-variant">Add Cell:</span>
+<span class="text-mutation-pink font-bold">25.0%</span>
+</div>
+<div class="w-full h-1.5 bg-surface-variant rounded-full overflow-hidden flex">
+<div class="h-full bg-mutation-pink" style="width: 25%"></div>
+<div class="h-full bg-neon-cyan" style="width: 25%"></div>
+<div class="h-full bg-neon-yellow" style="width: 50%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Mobile Bottom NavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 md:hidden bg-surface-container-lowest/80 backdrop-blur-md border-t border-outline-variant shadow-lg rounded-t-xl">
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl p-3 active:scale-90 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+<span class="font-label-caps text-label-caps text-[8px] mt-1">WORLD</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:bg-surface-variant active:scale-90 transition-transform">
+<span class="material-symbols-outlined">trending_up</span>
+<span class="font-label-caps text-label-caps text-[8px] mt-1">EVO</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:bg-surface-variant active:scale-90 transition-transform">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-caps text-label-caps text-[8px] mt-1">STATS</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant p-3 hover:bg-surface-variant active:scale-90 transition-transform">
+<span class="material-symbols-outlined">category</span>
+<span class="font-label-caps text-label-caps text-[8px] mt-1">EDITOR</span>
+</button>
+</nav>
+<script>
+        // Micro-interaction for range inputs to update their visual fill (simulated via basic JS)
+        document.querySelectorAll('input[type="range"]').forEach(input => {
+            input.addEventListener('input', function() {
+                const value = (this.value - this.min) / (this.max - this.min) * 100;
+                this.style.background = `linear-gradient(to right, currentColor 0%, currentColor ${value}%, transparent ${value}%, transparent 100%)`;
+            });
+        });
+
+        // Atmospheric light hover effect on simulation area
+        const canvasArea = document.querySelector('.hex-grid');
+        canvasArea.addEventListener('mousemove', (e) => {
+            const rect = canvasArea.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            canvasArea.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(34, 211, 238, 0.05) 0%, transparent 40%), ` + canvasArea.style.backgroundImage;
+        });
+    </script>
+</body></html>

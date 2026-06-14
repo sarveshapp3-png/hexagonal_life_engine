@@ -1,0 +1,14 @@
+C:\hexagonal_life_engine\hex_engine\tools\HexSaveTool\bin\Debug\net8.0\HexSaveTool.exe
+C:\hexagonal_life_engine\hex_engine\tools\HexSaveTool\bin\Debug\net8.0\HexSaveTool.deps.json
+C:\hexagonal_life_engine\hex_engine\tools\HexSaveTool\bin\Debug\net8.0\HexSaveTool.runtimeconfig.json
+C:\hexagonal_life_engine\hex_engine\tools\HexSaveTool\bin\Debug\net8.0\HexSaveTool.dll
+C:\hexagonal_life_engine\hex_engine\tools\HexSaveTool\bin\Debug\net8.0\HexSaveTool.pdb
+C:\hexagonal_life_engine\hex_engine\tools\HexSaveTool\obj\Debug\net8.0\HexSaveTool.GeneratedMSBuildEditorConfig.editorconfig
+C:\hexagonal_life_engine\hex_engine\tools\HexSaveTool\obj\Debug\net8.0\HexSaveTool.AssemblyInfoInputs.cache
+C:\hexagonal_life_engine\hex_engine\tools\HexSaveTool\obj\Debug\net8.0\HexSaveTool.AssemblyInfo.cs
+C:\hexagonal_life_engine\hex_engine\tools\HexSaveTool\obj\Debug\net8.0\HexSaveTool.csproj.CoreCompileInputs.cache
+C:\hexagonal_life_engine\hex_engine\tools\HexSaveTool\obj\Debug\net8.0\HexSaveTool.dll
+C:\hexagonal_life_engine\hex_engine\tools\HexSaveTool\obj\Debug\net8.0\refint\HexSaveTool.dll
+C:\hexagonal_life_engine\hex_engine\tools\HexSaveTool\obj\Debug\net8.0\HexSaveTool.pdb
+C:\hexagonal_life_engine\hex_engine\tools\HexSaveTool\obj\Debug\net8.0\HexSaveTool.genruntimeconfig.cache
+C:\hexagonal_life_engine\hex_engine\tools\HexSaveTool\obj\Debug\net8.0\ref\HexSaveTool.dll

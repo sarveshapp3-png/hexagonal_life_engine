@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GENESIS_CORE v1.0 | Genome Editor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700&amp;family=Inter:wght@400;500&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#004b1e",
+                        "error-container": "#93000a",
+                        "on-secondary": "#620040",
+                        "tertiary-fixed": "#ffe083",
+                        "tertiary-fixed-dim": "#eec200",
+                        "on-tertiary": "#3c2f00",
+                        "tertiary": "#f0c300",
+                        "surface": "#081425",
+                        "neon-cyan": "#22d3ee",
+                        "surface-variant": "#2a3548",
+                        "surface-dim": "#081425",
+                        "surface-bg": "#0f172a",
+                        "neon-pink": "#f472b6",
+                        "inverse-surface": "#d8e3fb",
+                        "surface-container": "#152031",
+                        "tertiary-container": "#cfa800",
+                        "on-secondary-fixed": "#3d0026",
+                        "secondary-fixed-dim": "#ffafd3",
+                        "secondary": "#ffafd3",
+                        "surface-container-lowest": "#040e1f",
+                        "background": "#081425",
+                        "surface-tint": "#4ae176",
+                        "on-tertiary-fixed": "#231b00",
+                        "neon-green": "#22c55e",
+                        "error": "#ffb4ab",
+                        "surface-container-highest": "#2a3548",
+                        "outline": "#869585",
+                        "outline-variant": "#3d4a3d",
+                        "surface-bright": "#2f3a4c",
+                        "primary-fixed-dim": "#4ae176",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "primary": "#4be277",
+                        "surface-container-low": "#111c2d",
+                        "on-surface-variant": "#bccbb9",
+                        "neon-yellow": "#facc15",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#85145a",
+                        "data-red": "#ef4444",
+                        "primary-fixed": "#6bff8f",
+                        "on-error": "#690005",
+                        "secondary-fixed": "#ffd8e7",
+                        "secondary-container": "#85145a",
+                        "surface-overlay": "#334155",
+                        "on-secondary-container": "#ff93c8",
+                        "on-primary-fixed": "#002109",
+                        "on-background": "#d8e3fb",
+                        "surface-container-high": "#1f2a3c",
+                        "on-surface": "#d8e3fb",
+                        "on-primary-fixed-variant": "#005321",
+                        "primary-container": "#22c55e",
+                        "inverse-primary": "#006e2f",
+                        "on-tertiary-container": "#4f3e00",
+                        "on-primary": "#003915",
+                        "inverse-on-surface": "#263143"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter-md": "16px",
+                        "margin-mobile": "16px",
+                        "gutter-xs": "8px",
+                        "margin-desktop": "32px",
+                        "panel-gap": "12px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "label-md": ["JetBrains Mono"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"],
+                        "headline-lg-mobile": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["10px", {"lineHeight": "14px", "fontWeight": "500"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "34px", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { background-color: #081425; color: #d8e3fb; overflow-x: hidden; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .hex-grid {
+            background-image: radial-gradient(circle, #334155 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .glass-panel {
+            background: rgba(21, 32, 49, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+        }
+        /* Custom Hex Drawing Simulation Background */
+        .hex-bg {
+            display: grid;
+            grid-template-columns: repeat(20, 1fr);
+            gap: 2px;
+            aspect-ratio: 1;
+        }
+        .hex-cell {
+            background: #111c2d;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            transition: all 0.2s ease;
+        }
+        .hex-cell:hover { background: #334155; }
+        .hex-cell.active { background: #22c55e; box-shadow: 0 0 10px #22c55e; }
+        
+        input[type="range"] {
+            -webkit-appearance: none;
+            background: #1e293b;
+            height: 4px;
+            border-radius: 2px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #22d3ee;
+            cursor: pointer;
+            box-shadow: 0 0 8px #22d3ee;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="font-body-md text-body-md flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin-mobile h-16 border-b border-outline-variant bg-surface-container-lowest/80 backdrop-blur-md">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-neon-cyan" style="font-variation-settings: 'FILL' 1;">biotech</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary drop-shadow-[0_0_8px_rgba(75,226,119,0.4)]">GENESIS_CORE v1.0</h1>
+</div>
+<nav class="hidden md:flex gap-6 items-center">
+<a class="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant hover:text-neon-cyan transition-colors" href="#">Sim</a>
+<a class="font-label-md text-label-md uppercase tracking-widest text-primary hover:text-neon-cyan transition-colors" href="#">Genome</a>
+<a class="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant hover:text-neon-cyan transition-colors" href="#">Stats</a>
+<a class="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant hover:text-neon-cyan transition-colors" href="#">Hub</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-neon-cyan transition-colors">settings</button>
+<div class="w-8 h-8 rounded-full bg-surface-variant border border-outline-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-xs">person</span>
+</div>
+</div>
+</header>
+<main class="flex-grow pt-16 pb-20 md:pb-0 px-gutter-md md:px-margin-desktop grid grid-cols-1 lg:grid-cols-12 gap-panel-gap max-w-screen-2xl mx-auto w-full">
+<!-- Sidebar: Simulation Controls -->
+<aside class="lg:col-span-3 flex flex-col gap-panel-gap py-gutter-md">
+<div class="glass-panel p-gutter-md rounded-xl space-y-6">
+<div class="flex items-center justify-between border-b border-outline-variant pb-2">
+<h2 class="font-label-md text-label-md text-neon-cyan uppercase">Control Hub</h2>
+<span class="font-label-sm text-label-sm text-on-surface-variant">V-0.98</span>
+</div>
+<!-- Simulation Speed -->
+<div class="space-y-3">
+<div class="flex justify-between items-center">
+<span class="font-label-sm text-label-sm opacity-70">TEMPORAL FLUX</span>
+<span class="font-label-sm text-label-sm text-primary">60 FPS</span>
+</div>
+<input class="w-full" max="120" min="1" type="range" value="60"/>
+<div class="flex gap-2">
+<button class="flex-1 bg-surface-variant hover:bg-surface-overlay text-on-surface py-2 rounded-lg transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">play_arrow</span>
+<span class="font-label-sm text-label-sm uppercase">Resume</span>
+</button>
+<button class="flex-1 bg-error-container/20 hover:bg-error-container/40 text-error py-2 rounded-lg transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">restart_alt</span>
+<span class="font-label-sm text-label-sm uppercase">Reset</span>
+</button>
+</div>
+</div>
+<!-- Active Brush Settings -->
+<div class="space-y-4">
+<span class="font-label-sm text-label-sm opacity-70 block">MANIPULATION TOOL</span>
+<div class="grid grid-cols-5 gap-2">
+<button class="aspect-square bg-neon-green/20 border border-neon-green text-neon-green rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="aspect-square bg-surface-variant hover:bg-surface-overlay border border-outline-variant rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-lg">ink_eraser</span>
+</button>
+<button class="aspect-square bg-surface-variant hover:bg-surface-overlay border border-outline-variant rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-lg">pan_tool</span>
+</button>
+<button class="aspect-square bg-surface-variant hover:bg-surface-overlay border border-outline-variant rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-lg">zoom_in</span>
+</button>
+<button class="aspect-square bg-surface-variant hover:bg-surface-overlay border border-outline-variant rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between">
+<label class="font-label-sm text-label-sm">BRUSH RADIUS</label>
+<span class="font-label-sm text-label-sm">2.4nm</span>
+</div>
+<input class="w-full" max="10" min="1" type="range" value="3"/>
+</div>
+</div>
+</div>
+<!-- Stats Module -->
+<div class="glass-panel p-gutter-md rounded-xl flex-grow overflow-hidden relative">
+<div class="absolute inset-0 opacity-10 pointer-events-none">
+
+</div>
+<div class="relative z-10 space-y-4">
+<h3 class="font-label-md text-label-md text-neon-pink uppercase">Biometric Readout</h3>
+<div class="space-y-3">
+<div class="flex justify-between items-end">
+<span class="font-label-sm text-label-sm opacity-60">POPULATION</span>
+<span class="font-label-md text-label-md font-bold text-neon-cyan">2,841</span>
+</div>
+<div class="h-1 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-neon-cyan w-2/3 shadow-[0_0_8px_#22d3ee]"></div>
+</div>
+<div class="flex justify-between items-end">
+<span class="font-label-sm text-label-sm opacity-60">DIVERSITY</span>
+<span class="font-label-md text-label-md font-bold text-neon-pink">12 Spp.</span>
+</div>
+<div class="h-1 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-neon-pink w-1/3 shadow-[0_0_8px_#f472b6]"></div>
+</div>
+<div class="flex justify-between items-end pt-4">
+<span class="font-label-sm text-label-sm opacity-60">MUTATION DELTA</span>
+<span class="font-label-md text-label-md font-bold text-neon-yellow">0.02%</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content: Hex Genome Editor -->
+<section class="lg:col-span-6 flex flex-col gap-panel-gap py-gutter-md">
+<div class="glass-panel rounded-xl flex-grow flex flex-col overflow-hidden">
+<!-- Editor Toolbar -->
+<div class="flex items-center justify-between p-4 border-b border-outline-variant bg-surface-container-low/50">
+<div class="flex gap-4">
+<button class="font-label-sm text-label-sm uppercase px-3 py-1 bg-primary text-on-primary rounded-full transition-all">Editor</button>
+<button class="font-label-sm text-label-sm uppercase px-3 py-1 text-on-surface-variant hover:text-primary transition-all">Simulation View</button>
+</div>
+<div class="flex gap-3">
+<button class="p-1 hover:text-neon-cyan transition-colors" title="Save Blueprint">
+<span class="material-symbols-outlined">save</span>
+</button>
+<button class="p-1 hover:text-neon-cyan transition-colors" title="Export JSON">
+<span class="material-symbols-outlined">download</span>
+</button>
+<button class="p-1 hover:text-error transition-colors" title="Clear Grid">
+<span class="material-symbols-outlined">refresh</span>
+</button>
+</div>
+</div>
+<!-- The Hex Grid Canvas -->
+<div class="flex-grow relative overflow-hidden hex-grid p-gutter-md cursor-crosshair">
+<!-- Animation Placeholder for atmospheric effect -->
+
+<div class="h-full w-full flex items-center justify-center">
+<div class="hex-bg w-full max-w-[500px]">
+<!-- 400 cells (20x20) generated via pseudo-simulation -->
+<!-- Central Organism Placeholder -->
+<script>
+                                // Visual hack to populate the hex grid without 400 separate HTML elements in prompt
+                                document.addEventListener('DOMContentLoaded', () => {
+                                    const grid = document.querySelector('.hex-bg');
+                                    for(let i=0; i<400; i++) {
+                                        const cell = document.createElement('div');
+                                        cell.className = 'hex-cell';
+                                        // Random active cells for "High-Fidelity" look
+                                        if([190, 191, 210, 211, 209, 189].includes(i)) {
+                                            cell.classList.add('active');
+                                            cell.style.background = '#22c55e';
+                                            cell.style.boxShadow = '0 0 10px #22c55e';
+                                        }
+                                        grid.appendChild(cell);
+                                    }
+                                });
+                            </script>
+</div>
+</div>
+<!-- Floating Coordinates Overlay -->
+<div class="absolute bottom-4 right-4 font-label-sm text-label-sm bg-surface-container-lowest/80 px-2 py-1 border border-outline-variant rounded">
+                        COORD: <span class="text-neon-cyan">X:12 Y:08</span> | <span class="text-neon-yellow">HEX_ID: 190</span>
+</div>
+</div>
+</div>
+<!-- Contextual Quick Actions -->
+<div class="flex gap-panel-gap">
+<button class="flex-1 glass-panel py-4 flex flex-col items-center gap-2 hover:bg-primary/10 transition-colors group">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest">New Species</span>
+</button>
+<button class="flex-1 glass-panel py-4 flex flex-col items-center gap-2 hover:bg-neon-cyan/10 transition-colors group">
+<span class="material-symbols-outlined text-neon-cyan group-hover:scale-110 transition-transform">shuffle</span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest">Randomize</span>
+</button>
+<button class="flex-1 glass-panel py-4 flex flex-col items-center gap-2 hover:bg-neon-pink/10 transition-colors group">
+<span class="material-symbols-outlined text-neon-pink group-hover:scale-110 transition-transform">science</span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest">Auto-Evolve</span>
+</button>
+</div>
+</section>
+<!-- Right Panel: Genome Editor Details -->
+<aside class="lg:col-span-3 flex flex-col gap-panel-gap py-gutter-md">
+<!-- Organism Settings -->
+<div class="glass-panel p-gutter-md rounded-xl space-y-6">
+<h3 class="font-label-md text-label-md text-neon-cyan uppercase border-b border-outline-variant pb-2">Organism Specs</h3>
+<div class="space-y-4">
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm opacity-60">SPECIES_ID</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant font-label-md text-label-md text-primary focus:ring-1 focus:ring-primary rounded p-2" type="text" value="OI9b0p3t6c"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm opacity-60">CELL_COUNT</label>
+<div class="font-label-md text-label-md text-on-surface">06 / 64</div>
+</div>
+<div class="space-y-1">
+<label class="font-label-sm text-label-sm opacity-60">ENERGY_INDEX</label>
+<div class="font-label-md text-label-md text-neon-yellow">0.82</div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between">
+<label class="font-label-sm text-label-sm opacity-60 uppercase">Mutation Rate</label>
+<span class="font-label-sm text-label-sm text-neon-pink">5.0%</span>
+</div>
+<input class="w-full" max="100" min="0" type="range" value="5"/>
+</div>
+</div>
+<div class="pt-2">
+<button class="w-full bg-primary text-on-primary py-3 rounded font-label-md text-label-md font-bold uppercase tracking-widest hover:opacity-90 shadow-[0_4px_12px_rgba(74,225,118,0.3)] transition-all">
+                        DEPLOY SPECIMEN
+                    </button>
+</div>
+</div>
+<!-- Cell Palette -->
+<div class="glass-panel p-gutter-md rounded-xl space-y-4 flex-grow">
+<h3 class="font-label-md text-label-md text-neon-pink uppercase border-b border-outline-variant pb-2">Cell Library</h3>
+<div class="grid grid-cols-2 gap-3 overflow-y-auto max-h-[350px] pr-2">
+<!-- Cell Type Card -->
+<div class="bg-surface-container-low border border-neon-green/30 p-2 rounded hover:border-neon-green cursor-pointer transition-all group">
+<div class="w-full h-8 bg-neon-green rounded mb-2 shadow-[0_0_8px_#22c55e]"></div>
+<div class="font-label-sm text-label-sm text-neon-green uppercase font-bold">Mover</div>
+<div class="text-[9px] text-on-surface-variant leading-tight mt-1 opacity-70">Provides kinetic energy.</div>
+</div>
+<!-- Cell Type Card -->
+<div class="bg-surface-container-low border border-outline-variant p-2 rounded hover:border-neon-cyan cursor-pointer transition-all">
+<div class="w-full h-8 bg-neon-cyan rounded mb-2 shadow-[0_0_8px_#22d3ee]"></div>
+<div class="font-label-sm text-label-sm text-neon-cyan uppercase font-bold">Producer</div>
+<div class="text-[9px] text-on-surface-variant leading-tight mt-1 opacity-70">Photosynthetic organelle.</div>
+</div>
+<!-- Cell Type Card -->
+<div class="bg-surface-container-low border border-outline-variant p-2 rounded hover:border-on-error cursor-pointer transition-all">
+<div class="w-full h-8 bg-error rounded mb-2 shadow-[0_0_8px_#ffb4ab]"></div>
+<div class="font-label-sm text-label-sm text-error uppercase font-bold">Eater</div>
+<div class="text-[9px] text-on-surface-variant leading-tight mt-1 opacity-70">Harvests organic material.</div>
+</div>
+<!-- Cell Type Card -->
+<div class="bg-surface-container-low border border-outline-variant p-2 rounded hover:border-neon-yellow cursor-pointer transition-all">
+<div class="w-full h-8 bg-neon-yellow rounded mb-2 shadow-[0_0_8px_#facc15]"></div>
+<div class="font-label-sm text-label-sm text-neon-yellow uppercase font-bold">Shield</div>
+<div class="text-[9px] text-on-surface-variant leading-tight mt-1 opacity-70">Defensive exoskeleton.</div>
+</div>
+<!-- Cell Type Card -->
+<div class="bg-surface-container-low border border-outline-variant p-2 rounded hover:border-tertiary cursor-pointer transition-all">
+<div class="w-full h-8 bg-tertiary rounded mb-2 shadow-[0_0_8px_#f0c300]"></div>
+<div class="font-label-sm text-label-sm text-tertiary uppercase font-bold">Brain</div>
+<div class="text-[9px] text-on-surface-variant leading-tight mt-1 opacity-70">Neural processing unit.</div>
+</div>
+<!-- Cell Type Card -->
+<div class="bg-surface-container-low border border-outline-variant p-2 rounded hover:border-neon-pink cursor-pointer transition-all">
+<div class="w-full h-8 bg-neon-pink rounded mb-2 shadow-[0_0_8px_#f472b6]"></div>
+<div class="font-label-sm text-label-sm text-neon-pink uppercase font-bold">Spore</div>
+<div class="text-[9px] text-on-surface-variant leading-tight mt-1 opacity-70">Reproductive emitter.</div>
+</div>
+</div>
+</div>
+</aside>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 pb-safe px-gutter-md border-t border-outline-variant bg-surface-container/90 backdrop-blur-xl shadow-lg">
+<div class="flex flex-col items-center justify-center text-on-surface-variant opacity-60 hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="font-label-sm text-label-sm">Sim</span>
+</div>
+<div class="flex flex-col items-center justify-center text-primary font-bold after:content-[''] after:w-1 after:h-1 after:bg-primary after:rounded-full after:mt-1 after:shadow-[0_0_8px_rgba(75,226,119,0.8)] scale-110 duration-200 ease-out">
+<span class="material-symbols-outlined">dns</span>
+<span class="font-label-sm text-label-sm">Genome</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant opacity-60 hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-sm text-label-sm">Stats</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant opacity-60 hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined">public</span>
+<span class="font-label-sm text-label-sm">Hub</span>
+</div>
+</nav>
+<!-- Background Atmospheric Effect -->
+<div class="fixed inset-0 -z-10 pointer-events-none opacity-40">
+
+</div>
+<!-- Micro-interactions Script -->
+<script>
+        // Simple hover sound effects or interactions can be added here
+        const cells = document.querySelectorAll('.hex-cell');
+        cells.forEach(cell => {
+            cell.addEventListener('click', () => {
+                cell.classList.toggle('active');
+                // Could update Organism Stats here
+            });
+        });
+    </script>
+</body></html>
