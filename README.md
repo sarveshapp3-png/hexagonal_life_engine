@@ -1,5 +1,7 @@
 # Hexagonal Life Engine Workspace
 
+NOTE: This project is still being made, feel free to help build it.
+
 NOTE: The inspiration for this project is thelifeengine.net
 
 This repository is split into three things:
