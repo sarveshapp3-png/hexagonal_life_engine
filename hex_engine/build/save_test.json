@@ -1,0 +1,94 @@
+{
+    "cells": [
+        {
+            "age": 0,
+            "energy": 0.9295102953910828,
+            "facing": "East",
+            "kind": "Mouth",
+            "q": -2,
+            "r": 1
+        },
+        {
+            "age": 0,
+            "energy": 0.963254988193512,
+            "facing": "East",
+            "kind": "Mouth",
+            "q": -2,
+            "r": 2
+        },
+        {
+            "age": 0,
+            "energy": 0.5799160003662109,
+            "facing": "East",
+            "kind": "Mouth",
+            "q": -1,
+            "r": 0
+        },
+        {
+            "age": 0,
+            "energy": 3.7801401615142822,
+            "facing": "East",
+            "kind": "Mouth",
+            "q": -1,
+            "r": 1
+        },
+        {
+            "age": 0,
+            "energy": 0.9782032370567322,
+            "facing": "East",
+            "kind": "Mouth",
+            "q": -1,
+            "r": 2
+        },
+        {
+            "age": 0,
+            "energy": 1.0308587551116943,
+            "facing": "East",
+            "kind": "Mover",
+            "q": 0,
+            "r": -1
+        },
+        {
+            "age": 0,
+            "energy": 7.11508846282959,
+            "facing": "East",
+            "kind": "Producer",
+            "q": 0,
+            "r": 0
+        },
+        {
+            "age": 0,
+            "energy": 3.428040027618408,
+            "facing": "East",
+            "kind": "Producer",
+            "q": 1,
+            "r": -1
+        },
+        {
+            "age": 0,
+            "energy": 5.952827453613281,
+            "facing": "East",
+            "kind": "Producer",
+            "q": 1,
+            "r": 0
+        },
+        {
+            "age": 0,
+            "energy": 3.4244649410247803,
+            "facing": "East",
+            "kind": "Producer",
+            "q": 2,
+            "r": -1
+        },
+        {
+            "age": 0,
+            "energy": 3.427658796310425,
+            "facing": "East",
+            "kind": "Producer",
+            "q": 2,
+            "r": 0
+        }
+    ],
+    "tick": 10,
+    "version": 1
+}

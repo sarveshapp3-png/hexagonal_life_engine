@@ -93,6 +93,8 @@ hex_engine_demo_EXTERNAL_OBJECTS =
 hex_engine_demo: CMakeFiles/hex_engine_demo.dir/src/main.cpp.o
 hex_engine_demo: CMakeFiles/hex_engine_demo.dir/build.make
 hex_engine_demo: libhex_engine_core.a
+hex_engine_demo: /usr/lib/x86_64-linux-gnu/liblua5.4.so
+hex_engine_demo: /usr/lib/x86_64-linux-gnu/libm.so
 hex_engine_demo: CMakeFiles/hex_engine_demo.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/ubuntu/hexagonal_life_engine/hex_engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable hex_engine_demo"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/hex_engine_demo.dir/link.txt --verbose=$(VERBOSE)

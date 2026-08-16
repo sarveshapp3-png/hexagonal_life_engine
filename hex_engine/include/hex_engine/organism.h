@@ -1,54 +1,74 @@
 #pragma once
 
 #include <cstdint>
-#include <unordered_map>
 #include <vector>
+#include <unordered_map>
+#include <memory>
+#include <string>
 
 #include "hex_engine/hex_coord.h"
-#include "hex_engine/world.h"
+#include "hex_engine/cell_kind.h"
 
 namespace hex_engine {
 
-// An organism is a contiguous cluster of cells connected via hex neighbors.
-struct OrganismCluster {
-    std::uint32_t id = 0;
-    std::vector<HexCoord> cells;
-    float total_energy = 0.0f;
-    std::uint32_t age = 0;
-    CellKind primary_kind = CellKind::Empty;
-    
-    [[nodiscard]] std::size_t cell_count() const noexcept { return cells.size(); }
+class World;
+
+struct AnatomyCell {
+    HexCoord local_pos;
+    CellKind kind;
 };
 
-// OrganismRegistry tracks all organisms in the world.
+struct BrainParams {
+    // Action to take when seeing a specific CellKind
+    // 0: Ignore, 1: Chase, 2: Retreat
+    std::unordered_map<CellKind, int> reactions;
+    
+    void randomize();
+    void mutate(float rate);
+};
+
+struct Genome {
+    std::vector<AnatomyCell> anatomy;
+    BrainParams brain;
+    
+    void mutate(float rate);
+};
+
+class Organism {
+public:
+    Organism(HexCoord pos, std::shared_ptr<Genome> genome);
+    
+    HexCoord position;
+    HexDirection rotation = HexDirection::East;
+    std::shared_ptr<Genome> genome;
+    
+    float energy = 0.0f;
+    uint32_t age = 0;
+    int health = 0;
+    
+    void update(World& world, const struct SimulationConfig& config, class OrganismRegistry& registry);
+    bool can_reproduce(const struct SimulationConfig& config) const;
+    std::shared_ptr<Organism> reproduce(World& world, const struct SimulationConfig& config);
+    
+    void take_damage(int amount, const struct SimulationConfig& config);
+    
+    [[nodiscard]] HexCoord get_world_pos(HexCoord local_pos) const;
+    void sync_to_world(World& world) const;
+    void clear_from_world(World& world) const;
+};
+
 class OrganismRegistry {
 public:
-    OrganismRegistry() = default;
+    void add_organism(std::shared_ptr<Organism> organism);
+    void update_all(World& world, const struct SimulationConfig& config);
     
-    // Rebuild the organism list from the current world state.
-    void rebuild_from_world(const World& world);
+    [[nodiscard]] const std::vector<std::shared_ptr<Organism>>& organisms() const { return organisms_; }
     
-    // Get all organisms.
-    [[nodiscard]] const std::vector<OrganismCluster>& organisms() const noexcept {
-        return organisms_;
-    }
-    
-    // Find the organism containing a given cell.
-    [[nodiscard]] const OrganismCluster* find_organism_at(const HexCoord coord) const noexcept;
-    
-    // Get organism by ID.
-    [[nodiscard]] const OrganismCluster* find_organism_by_id(std::uint32_t id) const noexcept;
-    
-    // Get the count of organisms.
-    [[nodiscard]] std::size_t organism_count() const noexcept { return organisms_.size(); }
-    
+    std::shared_ptr<Organism> get_organism_at(HexCoord world_pos) const;
+
 private:
-    std::vector<OrganismCluster> organisms_;
-    std::unordered_map<HexCoord, std::uint32_t, HexCoordHash> cell_to_organism_id_;
-    std::uint32_t next_organism_id_ = 1;
-    
-    void cluster_from_seed(const HexCoord seed, const World& world,
-                          std::unordered_map<HexCoord, bool, HexCoordHash>& visited);
+    std::vector<std::shared_ptr<Organism>> organisms_;
+    std::unordered_map<HexCoord, std::shared_ptr<Organism>, HexCoordHash> pos_to_org_;
 };
 
 } // namespace hex_engine

@@ -238,6 +238,54 @@ src/organism.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/hex_engine_core.dir/build.make CMakeFiles/hex_engine_core.dir/src/organism.cpp.s
 .PHONY : src/organism.cpp.s
 
+src/persistence.o: src/persistence.cpp.o
+.PHONY : src/persistence.o
+
+# target to build an object file
+src/persistence.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hex_engine_core.dir/build.make CMakeFiles/hex_engine_core.dir/src/persistence.cpp.o
+.PHONY : src/persistence.cpp.o
+
+src/persistence.i: src/persistence.cpp.i
+.PHONY : src/persistence.i
+
+# target to preprocess a source file
+src/persistence.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hex_engine_core.dir/build.make CMakeFiles/hex_engine_core.dir/src/persistence.cpp.i
+.PHONY : src/persistence.cpp.i
+
+src/persistence.s: src/persistence.cpp.s
+.PHONY : src/persistence.s
+
+# target to generate assembly for a file
+src/persistence.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hex_engine_core.dir/build.make CMakeFiles/hex_engine_core.dir/src/persistence.cpp.s
+.PHONY : src/persistence.cpp.s
+
+src/scripting.o: src/scripting.cpp.o
+.PHONY : src/scripting.o
+
+# target to build an object file
+src/scripting.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hex_engine_core.dir/build.make CMakeFiles/hex_engine_core.dir/src/scripting.cpp.o
+.PHONY : src/scripting.cpp.o
+
+src/scripting.i: src/scripting.cpp.i
+.PHONY : src/scripting.i
+
+# target to preprocess a source file
+src/scripting.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hex_engine_core.dir/build.make CMakeFiles/hex_engine_core.dir/src/scripting.cpp.i
+.PHONY : src/scripting.cpp.i
+
+src/scripting.s: src/scripting.cpp.s
+.PHONY : src/scripting.s
+
+# target to generate assembly for a file
+src/scripting.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hex_engine_core.dir/build.make CMakeFiles/hex_engine_core.dir/src/scripting.cpp.s
+.PHONY : src/scripting.cpp.s
+
 src/simulation.o: src/simulation.cpp.o
 .PHONY : src/simulation.o
 
@@ -332,6 +380,12 @@ help:
 	@echo "... src/organism.o"
 	@echo "... src/organism.i"
 	@echo "... src/organism.s"
+	@echo "... src/persistence.o"
+	@echo "... src/persistence.i"
+	@echo "... src/persistence.s"
+	@echo "... src/scripting.o"
+	@echo "... src/scripting.i"
+	@echo "... src/scripting.s"
 	@echo "... src/simulation.o"
 	@echo "... src/simulation.i"
 	@echo "... src/simulation.s"

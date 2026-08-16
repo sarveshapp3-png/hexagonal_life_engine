@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/ubuntu/hexagonal_life_engine/hex_engine/include
+CXX_INCLUDES = -I/home/ubuntu/hexagonal_life_engine/hex_engine/include -I/usr/include/lua5.4
 
 CXX_FLAGS = -std=c++20 -Wall -Wextra -Wpedantic
 

@@ -2,12 +2,10 @@
 
 #include <cstdint>
 #include <vector>
+#include <memory>
 
 #include "hex_engine/hex_coord.h"
-#include "hex_engine/brain.h"
-#include "hex_engine/mutation.h"
 #include "hex_engine/organism.h"
-#include "hex_engine/vision.h"
 #include "hex_engine/world.h"
 
 namespace hex_engine {
@@ -20,14 +18,16 @@ struct SimulationConfig {
     float producer_energy_per_tick = 0.5f;
     float mover_energy_cost_per_step = 0.3f;
     float mouth_harvest_efficiency = 0.8f;
-    float base_energy_decay = 0.1f;
+    float base_energy_decay = 0.05f;
     
-    float reproduction_threshold = 10.0f;
-    float offspring_energy = 2.0f;
-    float parent_energy_cost = 3.0f;
+    float reproduction_threshold = 2.0f; // per cell
+    float offspring_energy = 1.0f;       // per cell
+    float parent_energy_cost = 1.0f;     // per cell
     
     float mutation_rate = 0.1f;
-    float energy_variance = 0.2f;
+    bool insta_kill = false;
+    int lifespan_multiplier = 100;
+    int vision_range = 5;
 };
 
 class Simulator {
@@ -37,6 +37,7 @@ public:
     [[nodiscard]] World& world() noexcept { return world_; }
     [[nodiscard]] const World& world() const noexcept { return world_; }
     
+    [[nodiscard]] OrganismRegistry& registry() noexcept { return organism_registry_; }
     [[nodiscard]] const OrganismRegistry& registry() const noexcept { return organism_registry_; }
     
     void tick();
@@ -50,17 +51,6 @@ private:
     SimulationConfig config_;
     std::uint32_t tick_count_ = 0;
     OrganismRegistry organism_registry_;
-    MutationSystem mutation_system_;
-    VisionSystem vision_system_;
-    SimpleBrain simple_brain_;
-    
-    // Helper methods for tick processing.
-    void process_producers();
-    void process_mouths();
-    void process_movers();
-    void process_movement();
-    void process_reproduction();
-    void apply_energy_decay();
 };
 
 } // namespace hex_engine

@@ -6,6 +6,9 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Find Lua
+find_package(Lua REQUIRED)
+
 add_library(hex_engine_core STATIC)
 target_sources(
     hex_engine_core
@@ -14,6 +17,8 @@ target_sources(
         src/simulation.cpp
         src/organism.cpp
         src/mutation.cpp
+        src/persistence.cpp
+        src/scripting.cpp
         src/vision.cpp
         src/brain.cpp
 )
@@ -21,7 +26,9 @@ target_include_directories(
     hex_engine_core
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${LUA_INCLUDE_DIR}
 )
+target_link_libraries(hex_engine_core PUBLIC ${LUA_LIBRARIES})
 
 add_executable(hex_engine_demo src/main.cpp)
 target_link_libraries(hex_engine_demo PRIVATE hex_engine_core)

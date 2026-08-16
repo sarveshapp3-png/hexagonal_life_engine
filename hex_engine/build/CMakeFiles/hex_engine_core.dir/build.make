@@ -125,10 +125,38 @@ CMakeFiles/hex_engine_core.dir/src/mutation.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/hex_engine_core.dir/src/mutation.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ubuntu/hexagonal_life_engine/hex_engine/src/mutation.cpp -o CMakeFiles/hex_engine_core.dir/src/mutation.cpp.s
 
+CMakeFiles/hex_engine_core.dir/src/persistence.cpp.o: CMakeFiles/hex_engine_core.dir/flags.make
+CMakeFiles/hex_engine_core.dir/src/persistence.cpp.o: /home/ubuntu/hexagonal_life_engine/hex_engine/src/persistence.cpp
+CMakeFiles/hex_engine_core.dir/src/persistence.cpp.o: CMakeFiles/hex_engine_core.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ubuntu/hexagonal_life_engine/hex_engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/hex_engine_core.dir/src/persistence.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/hex_engine_core.dir/src/persistence.cpp.o -MF CMakeFiles/hex_engine_core.dir/src/persistence.cpp.o.d -o CMakeFiles/hex_engine_core.dir/src/persistence.cpp.o -c /home/ubuntu/hexagonal_life_engine/hex_engine/src/persistence.cpp
+
+CMakeFiles/hex_engine_core.dir/src/persistence.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/hex_engine_core.dir/src/persistence.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ubuntu/hexagonal_life_engine/hex_engine/src/persistence.cpp > CMakeFiles/hex_engine_core.dir/src/persistence.cpp.i
+
+CMakeFiles/hex_engine_core.dir/src/persistence.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/hex_engine_core.dir/src/persistence.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ubuntu/hexagonal_life_engine/hex_engine/src/persistence.cpp -o CMakeFiles/hex_engine_core.dir/src/persistence.cpp.s
+
+CMakeFiles/hex_engine_core.dir/src/scripting.cpp.o: CMakeFiles/hex_engine_core.dir/flags.make
+CMakeFiles/hex_engine_core.dir/src/scripting.cpp.o: /home/ubuntu/hexagonal_life_engine/hex_engine/src/scripting.cpp
+CMakeFiles/hex_engine_core.dir/src/scripting.cpp.o: CMakeFiles/hex_engine_core.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ubuntu/hexagonal_life_engine/hex_engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/hex_engine_core.dir/src/scripting.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/hex_engine_core.dir/src/scripting.cpp.o -MF CMakeFiles/hex_engine_core.dir/src/scripting.cpp.o.d -o CMakeFiles/hex_engine_core.dir/src/scripting.cpp.o -c /home/ubuntu/hexagonal_life_engine/hex_engine/src/scripting.cpp
+
+CMakeFiles/hex_engine_core.dir/src/scripting.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/hex_engine_core.dir/src/scripting.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ubuntu/hexagonal_life_engine/hex_engine/src/scripting.cpp > CMakeFiles/hex_engine_core.dir/src/scripting.cpp.i
+
+CMakeFiles/hex_engine_core.dir/src/scripting.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/hex_engine_core.dir/src/scripting.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ubuntu/hexagonal_life_engine/hex_engine/src/scripting.cpp -o CMakeFiles/hex_engine_core.dir/src/scripting.cpp.s
+
 CMakeFiles/hex_engine_core.dir/src/vision.cpp.o: CMakeFiles/hex_engine_core.dir/flags.make
 CMakeFiles/hex_engine_core.dir/src/vision.cpp.o: /home/ubuntu/hexagonal_life_engine/hex_engine/src/vision.cpp
 CMakeFiles/hex_engine_core.dir/src/vision.cpp.o: CMakeFiles/hex_engine_core.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ubuntu/hexagonal_life_engine/hex_engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/hex_engine_core.dir/src/vision.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ubuntu/hexagonal_life_engine/hex_engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/hex_engine_core.dir/src/vision.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/hex_engine_core.dir/src/vision.cpp.o -MF CMakeFiles/hex_engine_core.dir/src/vision.cpp.o.d -o CMakeFiles/hex_engine_core.dir/src/vision.cpp.o -c /home/ubuntu/hexagonal_life_engine/hex_engine/src/vision.cpp
 
 CMakeFiles/hex_engine_core.dir/src/vision.cpp.i: cmake_force
@@ -142,7 +170,7 @@ CMakeFiles/hex_engine_core.dir/src/vision.cpp.s: cmake_force
 CMakeFiles/hex_engine_core.dir/src/brain.cpp.o: CMakeFiles/hex_engine_core.dir/flags.make
 CMakeFiles/hex_engine_core.dir/src/brain.cpp.o: /home/ubuntu/hexagonal_life_engine/hex_engine/src/brain.cpp
 CMakeFiles/hex_engine_core.dir/src/brain.cpp.o: CMakeFiles/hex_engine_core.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ubuntu/hexagonal_life_engine/hex_engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/hex_engine_core.dir/src/brain.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ubuntu/hexagonal_life_engine/hex_engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/hex_engine_core.dir/src/brain.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/hex_engine_core.dir/src/brain.cpp.o -MF CMakeFiles/hex_engine_core.dir/src/brain.cpp.o.d -o CMakeFiles/hex_engine_core.dir/src/brain.cpp.o -c /home/ubuntu/hexagonal_life_engine/hex_engine/src/brain.cpp
 
 CMakeFiles/hex_engine_core.dir/src/brain.cpp.i: cmake_force
@@ -159,6 +187,8 @@ hex_engine_core_OBJECTS = \
 "CMakeFiles/hex_engine_core.dir/src/simulation.cpp.o" \
 "CMakeFiles/hex_engine_core.dir/src/organism.cpp.o" \
 "CMakeFiles/hex_engine_core.dir/src/mutation.cpp.o" \
+"CMakeFiles/hex_engine_core.dir/src/persistence.cpp.o" \
+"CMakeFiles/hex_engine_core.dir/src/scripting.cpp.o" \
 "CMakeFiles/hex_engine_core.dir/src/vision.cpp.o" \
 "CMakeFiles/hex_engine_core.dir/src/brain.cpp.o"
 
@@ -169,11 +199,13 @@ libhex_engine_core.a: CMakeFiles/hex_engine_core.dir/src/world.cpp.o
 libhex_engine_core.a: CMakeFiles/hex_engine_core.dir/src/simulation.cpp.o
 libhex_engine_core.a: CMakeFiles/hex_engine_core.dir/src/organism.cpp.o
 libhex_engine_core.a: CMakeFiles/hex_engine_core.dir/src/mutation.cpp.o
+libhex_engine_core.a: CMakeFiles/hex_engine_core.dir/src/persistence.cpp.o
+libhex_engine_core.a: CMakeFiles/hex_engine_core.dir/src/scripting.cpp.o
 libhex_engine_core.a: CMakeFiles/hex_engine_core.dir/src/vision.cpp.o
 libhex_engine_core.a: CMakeFiles/hex_engine_core.dir/src/brain.cpp.o
 libhex_engine_core.a: CMakeFiles/hex_engine_core.dir/build.make
 libhex_engine_core.a: CMakeFiles/hex_engine_core.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/ubuntu/hexagonal_life_engine/hex_engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX static library libhex_engine_core.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/ubuntu/hexagonal_life_engine/hex_engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX static library libhex_engine_core.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/hex_engine_core.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/hex_engine_core.dir/link.txt --verbose=$(VERBOSE)
 

@@ -48,5 +48,17 @@ enum class CellKind : std::uint8_t {
     return "Unknown";
 }
 
+[[nodiscard]] constexpr CellKind cell_kind_from_name(const std::string_view name) noexcept {
+    if (name == "Food") return CellKind::Food;
+    if (name == "Wall") return CellKind::Wall;
+    if (name == "Mouth") return CellKind::Mouth;
+    if (name == "Producer") return CellKind::Producer;
+    if (name == "Mover") return CellKind::Mover;
+    if (name == "Killer") return CellKind::Killer;
+    if (name == "Armor") return CellKind::Armor;
+    if (name == "Eye") return CellKind::Eye;
+    return CellKind::Empty;
+}
+
 } // namespace hex_engine
 

@@ -42,6 +42,27 @@ enum class HexDirection : std::uint8_t {
     SouthEast = 5,
 };
 
+[[nodiscard]] constexpr std::string_view hex_direction_name(const HexDirection direction) noexcept {
+    switch (direction) {
+    case HexDirection::East: return "East";
+    case HexDirection::NorthEast: return "NorthEast";
+    case HexDirection::NorthWest: return "NorthWest";
+    case HexDirection::West: return "West";
+    case HexDirection::SouthWest: return "SouthWest";
+    case HexDirection::SouthEast: return "SouthEast";
+    }
+    return "Unknown";
+}
+
+[[nodiscard]] constexpr HexDirection hex_direction_from_name(const std::string_view name) noexcept {
+    if (name == "NorthEast") return HexDirection::NorthEast;
+    if (name == "NorthWest") return HexDirection::NorthWest;
+    if (name == "West") return HexDirection::West;
+    if (name == "SouthWest") return HexDirection::SouthWest;
+    if (name == "SouthEast") return HexDirection::SouthEast;
+    return HexDirection::East;
+}
+
 // The axial direction vectors below follow the standard cube/axial pattern from
 // established hex-grid practice, which keeps future algorithms simple.
 inline constexpr std::array<HexCoord, 6> kHexDirectionOffsets = {{
