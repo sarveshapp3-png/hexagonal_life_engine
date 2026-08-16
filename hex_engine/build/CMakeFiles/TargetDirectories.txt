@@ -1,0 +1,4 @@
+/home/ubuntu/hexagonal_life_engine/hex_engine/build/CMakeFiles/hex_engine_core.dir
+/home/ubuntu/hexagonal_life_engine/hex_engine/build/CMakeFiles/hex_engine_demo.dir
+/home/ubuntu/hexagonal_life_engine/hex_engine/build/CMakeFiles/edit_cache.dir
+/home/ubuntu/hexagonal_life_engine/hex_engine/build/CMakeFiles/rebuild_cache.dir
