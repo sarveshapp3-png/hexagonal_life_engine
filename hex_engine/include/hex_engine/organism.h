@@ -32,15 +32,17 @@ struct Genome {
     BrainParams brain;
     
     void mutate(float rate);
+    [[nodiscard]] float distance(const Genome& other) const;
 };
 
 class Organism {
 public:
-    Organism(HexCoord pos, std::shared_ptr<Genome> genome);
+    Organism(HexCoord pos, std::shared_ptr<Genome> genome, std::shared_ptr<class Species> species);
     
     HexCoord position;
     HexDirection rotation = HexDirection::East;
     std::shared_ptr<Genome> genome;
+    std::shared_ptr<class Species> species;
     
     float energy = 0.0f;
     uint32_t age = 0;
@@ -61,7 +63,9 @@ class OrganismRegistry {
 public:
     void add_organism(std::shared_ptr<Organism> organism);
     void update_all(World& world, const struct SimulationConfig& config);
+    void clear();
     
+    [[nodiscard]] std::vector<std::shared_ptr<Organism>>& organisms() { return organisms_; }
     [[nodiscard]] const std::vector<std::shared_ptr<Organism>>& organisms() const { return organisms_; }
     
     std::shared_ptr<Organism> get_organism_at(HexCoord world_pos) const;

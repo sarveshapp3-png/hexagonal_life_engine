@@ -217,6 +217,7 @@ CMakeFiles/hex_engine_core.dir/src/organism.cpp.o: \
  /home/ubuntu/hexagonal_life_engine/hex_engine/include/hex_engine/cell_kind.h \
  /home/ubuntu/hexagonal_life_engine/hex_engine/include/hex_engine/world.h \
  /home/ubuntu/hexagonal_life_engine/hex_engine/include/hex_engine/simulation.h \
+ /home/ubuntu/hexagonal_life_engine/hex_engine/include/hex_engine/species.h \
  /usr/include/c++/13/algorithm /usr/include/c++/13/bits/ranges_algo.h \
  /usr/include/c++/13/pstl/glue_algorithm_defs.h \
  /usr/include/c++/13/random /usr/include/c++/13/cmath /usr/include/math.h \

@@ -217,4 +217,5 @@ CMakeFiles/hex_engine_demo.dir/src/main.cpp.o: \
  /usr/include/c++/13/bits/uniform_int_dist.h \
  /home/ubuntu/hexagonal_life_engine/hex_engine/include/hex_engine/organism.h \
  /home/ubuntu/hexagonal_life_engine/hex_engine/include/hex_engine/simulation.h \
- /home/ubuntu/hexagonal_life_engine/hex_engine/include/hex_engine/world.h
+ /home/ubuntu/hexagonal_life_engine/hex_engine/include/hex_engine/world.h \
+ /home/ubuntu/hexagonal_life_engine/hex_engine/include/hex_engine/species.h

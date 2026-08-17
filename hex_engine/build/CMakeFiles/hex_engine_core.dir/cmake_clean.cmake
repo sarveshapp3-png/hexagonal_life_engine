@@ -11,6 +11,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/hex_engine_core.dir/src/scripting.cpp.o.d"
   "CMakeFiles/hex_engine_core.dir/src/simulation.cpp.o"
   "CMakeFiles/hex_engine_core.dir/src/simulation.cpp.o.d"
+  "CMakeFiles/hex_engine_core.dir/src/species.cpp.o"
+  "CMakeFiles/hex_engine_core.dir/src/species.cpp.o.d"
   "CMakeFiles/hex_engine_core.dir/src/vision.cpp.o"
   "CMakeFiles/hex_engine_core.dir/src/vision.cpp.o.d"
   "CMakeFiles/hex_engine_core.dir/src/world.cpp.o"

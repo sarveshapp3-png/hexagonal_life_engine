@@ -310,6 +310,30 @@ src/simulation.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/hex_engine_core.dir/build.make CMakeFiles/hex_engine_core.dir/src/simulation.cpp.s
 .PHONY : src/simulation.cpp.s
 
+src/species.o: src/species.cpp.o
+.PHONY : src/species.o
+
+# target to build an object file
+src/species.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hex_engine_core.dir/build.make CMakeFiles/hex_engine_core.dir/src/species.cpp.o
+.PHONY : src/species.cpp.o
+
+src/species.i: src/species.cpp.i
+.PHONY : src/species.i
+
+# target to preprocess a source file
+src/species.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hex_engine_core.dir/build.make CMakeFiles/hex_engine_core.dir/src/species.cpp.i
+.PHONY : src/species.cpp.i
+
+src/species.s: src/species.cpp.s
+.PHONY : src/species.s
+
+# target to generate assembly for a file
+src/species.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/hex_engine_core.dir/build.make CMakeFiles/hex_engine_core.dir/src/species.cpp.s
+.PHONY : src/species.cpp.s
+
 src/vision.o: src/vision.cpp.o
 .PHONY : src/vision.o
 
@@ -389,6 +413,9 @@ help:
 	@echo "... src/simulation.o"
 	@echo "... src/simulation.i"
 	@echo "... src/simulation.s"
+	@echo "... src/species.o"
+	@echo "... src/species.i"
+	@echo "... src/species.s"
 	@echo "... src/vision.o"
 	@echo "... src/vision.i"
 	@echo "... src/vision.s"

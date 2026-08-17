@@ -235,6 +235,7 @@ CMakeFiles/hex_engine_core.dir/src/scripting.cpp.o: \
  /home/ubuntu/hexagonal_life_engine/hex_engine/include/hex_engine/organism.h \
  /home/ubuntu/hexagonal_life_engine/hex_engine/include/hex_engine/cell_kind.h \
  /home/ubuntu/hexagonal_life_engine/hex_engine/include/hex_engine/world.h \
+ /home/ubuntu/hexagonal_life_engine/hex_engine/include/hex_engine/species.h \
  /usr/include/lua5.4/lua.hpp /usr/include/lua5.4/lua.h \
  /usr/include/lua5.4/luaconf.h \
  /usr/include/x86_64-linux-gnu/lua5.4-deb-multiarch.h \

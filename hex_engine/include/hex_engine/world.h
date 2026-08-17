@@ -4,30 +4,34 @@
 #include <cstdint>
 #include <unordered_map>
 #include <vector>
+#include <memory>
 
 #include "hex_engine/cell_kind.h"
 #include "hex_engine/hex_coord.h"
 
 namespace hex_engine {
 
-// A cell is a small bit of state attached to a coordinate.
 struct Cell final {
-    CellKind kind = CellKind::Empty;   // Cell role or state.
-    std::uint32_t age = 0;             // Tick age for lifecycle rules.
-    float energy = 1.0f;               // Energy level for metabolism.
-    HexDirection facing = HexDirection::East;  // Orientation for movement.
+    CellKind kind = CellKind::Empty;
+    std::uint32_t age = 0;
+    float energy = 1.0f;
+    HexDirection facing = HexDirection::East;
 };
 
-// Pheromones are values stored on the grid that decay and diffuse.
 struct Pheromones final {
-    float values[3] = {0.0f, 0.0f, 0.0f}; // Support for multiple pheromone types.
+    float values[3] = {0.0f, 0.0f, 0.0f};
 };
 
-// Sparse storage for cells and pheromones.
+// A Chunk represents a fixed-size region of the world for optimization.
+struct Chunk final {
+    static constexpr int kSize = 16; // Chunk radius
+    std::unordered_map<HexCoord, Cell, HexCoordHash> cells;
+    std::unordered_map<HexCoord, Pheromones, HexCoordHash> pheromones;
+};
+
 class World final {
 public:
-    using CellMap = std::unordered_map<HexCoord, Cell, HexCoordHash>;
-    using PheromoneMap = std::unordered_map<HexCoord, Pheromones, HexCoordHash>;
+    using ChunkMap = std::unordered_map<HexCoord, std::unique_ptr<Chunk>, HexCoordHash>;
 
     void clear();
 
@@ -51,14 +55,18 @@ public:
     [[nodiscard]] float pheromone_at(const HexCoord coord, int type) const noexcept;
     void add_pheromone(const HexCoord coord, int type, float amount);
     void decay_pheromones(float decay_factor);
+    void diffuse_pheromones(float diffusion_rate);
     
     // Deterministic ordering
     [[nodiscard]] std::vector<HexCoord> occupied_coords() const;
     [[nodiscard]] std::vector<HexCoord> pheromone_coords() const;
 
 private:
-    CellMap cells_;
-    PheromoneMap pheromones_;
+    ChunkMap chunks_;
+    std::size_t total_cells_ = 0;
+
+    Chunk& get_or_create_chunk(const HexCoord coord);
+    [[nodiscard]] HexCoord world_to_chunk_coord(const HexCoord coord) const noexcept;
 };
 
 struct WorldBounds final {

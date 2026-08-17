@@ -7,6 +7,7 @@
 #include "hex_engine/hex_coord.h"
 #include "hex_engine/organism.h"
 #include "hex_engine/world.h"
+#include "hex_engine/species.h"
 
 namespace hex_engine {
 
@@ -40,6 +41,9 @@ public:
     [[nodiscard]] OrganismRegistry& registry() noexcept { return organism_registry_; }
     [[nodiscard]] const OrganismRegistry& registry() const noexcept { return organism_registry_; }
     
+    [[nodiscard]] FossilRecord& fossil_record() noexcept { return fossil_record_; }
+    [[nodiscard]] const FossilRecord& fossil_record() const noexcept { return fossil_record_; }
+
     void tick();
     
     [[nodiscard]] std::uint32_t tick_count() const noexcept { return tick_count_; }
@@ -51,6 +55,7 @@ private:
     SimulationConfig config_;
     std::uint32_t tick_count_ = 0;
     OrganismRegistry organism_registry_;
+    FossilRecord fossil_record_;
 };
 
 } // namespace hex_engine

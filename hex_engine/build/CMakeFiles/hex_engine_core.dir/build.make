@@ -181,6 +181,20 @@ CMakeFiles/hex_engine_core.dir/src/brain.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/hex_engine_core.dir/src/brain.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ubuntu/hexagonal_life_engine/hex_engine/src/brain.cpp -o CMakeFiles/hex_engine_core.dir/src/brain.cpp.s
 
+CMakeFiles/hex_engine_core.dir/src/species.cpp.o: CMakeFiles/hex_engine_core.dir/flags.make
+CMakeFiles/hex_engine_core.dir/src/species.cpp.o: /home/ubuntu/hexagonal_life_engine/hex_engine/src/species.cpp
+CMakeFiles/hex_engine_core.dir/src/species.cpp.o: CMakeFiles/hex_engine_core.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/ubuntu/hexagonal_life_engine/hex_engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/hex_engine_core.dir/src/species.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/hex_engine_core.dir/src/species.cpp.o -MF CMakeFiles/hex_engine_core.dir/src/species.cpp.o.d -o CMakeFiles/hex_engine_core.dir/src/species.cpp.o -c /home/ubuntu/hexagonal_life_engine/hex_engine/src/species.cpp
+
+CMakeFiles/hex_engine_core.dir/src/species.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/hex_engine_core.dir/src/species.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/ubuntu/hexagonal_life_engine/hex_engine/src/species.cpp > CMakeFiles/hex_engine_core.dir/src/species.cpp.i
+
+CMakeFiles/hex_engine_core.dir/src/species.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/hex_engine_core.dir/src/species.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/ubuntu/hexagonal_life_engine/hex_engine/src/species.cpp -o CMakeFiles/hex_engine_core.dir/src/species.cpp.s
+
 # Object files for target hex_engine_core
 hex_engine_core_OBJECTS = \
 "CMakeFiles/hex_engine_core.dir/src/world.cpp.o" \
@@ -190,7 +204,8 @@ hex_engine_core_OBJECTS = \
 "CMakeFiles/hex_engine_core.dir/src/persistence.cpp.o" \
 "CMakeFiles/hex_engine_core.dir/src/scripting.cpp.o" \
 "CMakeFiles/hex_engine_core.dir/src/vision.cpp.o" \
-"CMakeFiles/hex_engine_core.dir/src/brain.cpp.o"
+"CMakeFiles/hex_engine_core.dir/src/brain.cpp.o" \
+"CMakeFiles/hex_engine_core.dir/src/species.cpp.o"
 
 # External object files for target hex_engine_core
 hex_engine_core_EXTERNAL_OBJECTS =
@@ -203,9 +218,10 @@ libhex_engine_core.a: CMakeFiles/hex_engine_core.dir/src/persistence.cpp.o
 libhex_engine_core.a: CMakeFiles/hex_engine_core.dir/src/scripting.cpp.o
 libhex_engine_core.a: CMakeFiles/hex_engine_core.dir/src/vision.cpp.o
 libhex_engine_core.a: CMakeFiles/hex_engine_core.dir/src/brain.cpp.o
+libhex_engine_core.a: CMakeFiles/hex_engine_core.dir/src/species.cpp.o
 libhex_engine_core.a: CMakeFiles/hex_engine_core.dir/build.make
 libhex_engine_core.a: CMakeFiles/hex_engine_core.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/ubuntu/hexagonal_life_engine/hex_engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX static library libhex_engine_core.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/ubuntu/hexagonal_life_engine/hex_engine/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking CXX static library libhex_engine_core.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/hex_engine_core.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/hex_engine_core.dir/link.txt --verbose=$(VERBOSE)
 

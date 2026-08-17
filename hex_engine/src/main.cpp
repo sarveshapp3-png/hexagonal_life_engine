@@ -7,68 +7,55 @@
 #include "hex_engine/organism.h"
 #include "hex_engine/simulation.h"
 #include "hex_engine/world.h"
+#include "hex_engine/species.h"
 
 int main() {
     using namespace hex_engine;
 
-    std::cout << "=== Hex Engine Phase 6: Advanced Behaviors (Killer, Vision, Brain) ===\n\n";
+    std::cout << "=== Hex Engine Phase 7: Species Tracking & Fossil Record ===\n\n";
 
     SimulationConfig config;
-    config.mutation_rate = 0.1f;
-    config.reproduction_threshold = 3.0f;
-    config.producer_energy_per_tick = 0.5f;
+    config.mutation_rate = 0.3f; // High mutation to see new species
+    config.reproduction_threshold = 4.0f;
+    config.producer_energy_per_tick = 0.8f;
     
     Simulator sim(config);
     
-    // Create a Predator Genome
-    auto predator_genome = std::make_shared<Genome>();
-    predator_genome->anatomy = {
-        {{0, 0}, CellKind::Mover},
-        {{1, 0}, CellKind::Killer},
-        {{0, 1}, CellKind::Eye}
-    };
-    predator_genome->brain.reactions[CellKind::Food] = 1; // Chase food
-    predator_genome->brain.reactions[CellKind::Producer] = 1; // Chase producers
-    
-    // Create a Prey Genome
-    auto prey_genome = std::make_shared<Genome>();
-    prey_genome->anatomy = {
+    // Create initial species
+    auto founding_genome = std::make_shared<Genome>();
+    founding_genome->anatomy = {
         {{0, 0}, CellKind::Producer},
-        {{1, 0}, CellKind::Armor}
+        {{1, 0}, CellKind::Mouth},
+        {{0, 1}, CellKind::Mover}
     };
+    founding_genome->brain.randomize();
     
-    // Seed organisms
-    auto predator = std::make_shared<Organism>(HexCoord{0, 0}, predator_genome);
-    predator->energy = 10.0f;
-    sim.registry().add_organism(predator);
+    auto initial_species = sim.fossil_record().record_new_species(founding_genome, nullptr, 0);
     
-    auto prey = std::make_shared<Organism>(HexCoord{5, 0}, prey_genome);
-    prey->energy = 10.0f;
-    sim.registry().add_organism(prey);
-    
-    // Add some food
-    sim.world().set_cell_with_energy({10, 0}, CellKind::Food, 20.0f);
+    // Seed initial organisms
+    for(int i=0; i<3; ++i) {
+        auto org = std::make_shared<Organism>(HexCoord{i*5, 0}, founding_genome, initial_species);
+        org->energy = 10.0f;
+        sim.registry().add_organism(org);
+        org->sync_to_world(sim.world());
+    }
 
-    std::cout << "Predator at (0,0), Prey at (5,0), Food at (10,0)\n";
-    std::cout << "Running 100 ticks...\n";
+    std::cout << "Starting simulation with 1 species: " << initial_species->name << "\n";
 
     for (int i = 0; i < 100; ++i) {
         sim.tick();
         
         if (i % 20 == 0) {
             std::cout << "Tick " << i << ": " 
-                      << sim.registry().organisms().size() << " organisms.\n";
-            for (const auto& org : sim.registry().organisms()) {
-                std::string type = "Unknown";
-                if (org->genome->anatomy[0].kind == CellKind::Mover) type = "Predator";
-                if (org->genome->anatomy[0].kind == CellKind::Producer) type = "Prey";
-                
-                std::cout << "  - " << type << " at " << org->position 
-                          << ", energy: " << org->energy << ", health: " << org->health << "\n";
+                      << sim.registry().organisms().size() << " orgs, "
+                      << sim.fossil_record().extant_species().size() << " extant species.\n";
+            
+            for (const auto& [name, species] : sim.fossil_record().extant_species()) {
+                std::cout << "  - " << name << ": pop " << species->population << "\n";
             }
         }
     }
 
-    std::cout << "\n=== Advanced Behaviors Verified ===\n";
+    std::cout << "\n=== Species Evolution Verified ===\n";
     return 0;
 }

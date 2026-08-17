@@ -1,80 +1,117 @@
 #include "hex_engine/world.h"
 #include <algorithm>
+#include <cmath>
 
 namespace hex_engine {
 
 void World::clear() {
-    cells_.clear();
-    pheromones_.clear();
+    chunks_.clear();
+    total_cells_ = 0;
 }
 
 bool World::empty() const noexcept {
-    return cells_.empty();
+    return total_cells_ == 0;
 }
 
 std::size_t World::occupied_count() const noexcept {
-    return cells_.size();
+    return total_cells_;
+}
+
+HexCoord World::world_to_chunk_coord(const HexCoord coord) const noexcept {
+    // Basic tiling for hex chunks. 
+    // In a real hex tiling, this is more complex, but simple rectangular axial tiling works for sparse lookups.
+    return { 
+        static_cast<int>(std::floor(static_cast<float>(coord.q) / Chunk::kSize)),
+        static_cast<int>(std::floor(static_cast<float>(coord.r) / Chunk::kSize))
+    };
+}
+
+Chunk& World::get_or_create_chunk(const HexCoord coord) {
+    HexCoord cc = world_to_chunk_coord(coord);
+    auto it = chunks_.find(cc);
+    if (it == chunks_.end()) {
+        chunks_[cc] = std::make_unique<Chunk>();
+        return *chunks_[cc];
+    }
+    return *it->second;
 }
 
 bool World::contains(const HexCoord coord) const noexcept {
-    return cells_.find(coord) != cells_.end();
+    HexCoord cc = world_to_chunk_coord(coord);
+    auto it = chunks_.find(cc);
+    if (it == chunks_.end()) return false;
+    return it->second->cells.find(coord) != it->second->cells.end();
 }
 
 const Cell* World::find_cell(const HexCoord coord) const noexcept {
-    const auto iter = cells_.find(coord);
-    if (iter == cells_.end()) return nullptr;
-    return &iter->second;
+    HexCoord cc = world_to_chunk_coord(coord);
+    auto it = chunks_.find(cc);
+    if (it == chunks_.end()) return nullptr;
+    auto cell_it = it->second->cells.find(coord);
+    if (cell_it == it->second->cells.end()) return nullptr;
+    return &cell_it->second;
 }
 
 Cell* World::find_cell_mut(const HexCoord coord) noexcept {
-    const auto iter = cells_.find(coord);
-    if (iter == cells_.end()) return nullptr;
-    return &iter->second;
+    HexCoord cc = world_to_chunk_coord(coord);
+    auto it = chunks_.find(cc);
+    if (it == chunks_.end()) return nullptr;
+    auto cell_it = it->second->cells.find(coord);
+    if (cell_it == it->second->cells.end()) return nullptr;
+    return &cell_it->second;
 }
 
 CellKind World::kind_at(const HexCoord coord) const noexcept {
-    const Cell* const cell = find_cell(coord);
-    if (cell == nullptr) return CellKind::Empty;
-    return cell->kind;
+    const Cell* cell = find_cell(coord);
+    return cell ? cell->kind : CellKind::Empty;
 }
 
 float World::energy_at(const HexCoord coord) const noexcept {
-    const Cell* const cell = find_cell(coord);
-    if (cell == nullptr) return 0.0f;
-    return cell->energy;
+    const Cell* cell = find_cell(coord);
+    return cell ? cell->energy : 0.0f;
 }
 
 void World::set_cell(const HexCoord coord, const CellKind kind) {
     if (kind == CellKind::Empty) {
-        cells_.erase(coord);
+        clear_cell(coord);
         return;
     }
-    cells_[coord] = Cell{kind, 0U, 1.0f, HexDirection::East};
+    Chunk& chunk = get_or_create_chunk(coord);
+    if (chunk.cells.find(coord) == chunk.cells.end()) total_cells_++;
+    chunk.cells[coord] = Cell{kind, 0U, 1.0f, HexDirection::East};
 }
 
 void World::set_cell_with_energy(const HexCoord coord, const CellKind kind, float energy) {
     if (kind == CellKind::Empty) {
-        cells_.erase(coord);
+        clear_cell(coord);
         return;
     }
-    cells_[coord] = Cell{kind, 0U, energy, HexDirection::East};
+    Chunk& chunk = get_or_create_chunk(coord);
+    if (chunk.cells.find(coord) == chunk.cells.end()) total_cells_++;
+    chunk.cells[coord] = Cell{kind, 0U, energy, HexDirection::East};
 }
 
 void World::set_cell_full(const HexCoord coord, const Cell& cell) {
     if (cell.kind == CellKind::Empty) {
-        cells_.erase(coord);
+        clear_cell(coord);
         return;
     }
-    cells_[coord] = cell;
+    Chunk& chunk = get_or_create_chunk(coord);
+    if (chunk.cells.find(coord) == chunk.cells.end()) total_cells_++;
+    chunk.cells[coord] = cell;
 }
 
 void World::clear_cell(const HexCoord coord) {
-    cells_.erase(coord);
+    HexCoord cc = world_to_chunk_coord(coord);
+    auto it = chunks_.find(cc);
+    if (it != chunks_.end()) {
+        if (it->second->cells.erase(coord) > 0) total_cells_--;
+    }
 }
 
 void World::add_energy(const HexCoord coord, float amount) {
     Cell* cell = find_cell_mut(coord);
-    if (cell != nullptr) {
+    if (cell) {
         cell->energy += amount;
         if (cell->energy > 100.0f) cell->energy = 100.0f;
         if (cell->energy < 0.0f) cell->energy = 0.0f;
@@ -83,57 +120,68 @@ void World::add_energy(const HexCoord coord, float amount) {
 
 void World::set_facing(const HexCoord coord, HexDirection direction) {
     Cell* cell = find_cell_mut(coord);
-    if (cell != nullptr) cell->facing = direction;
+    if (cell) cell->facing = direction;
 }
 
 float World::pheromone_at(const HexCoord coord, int type) const noexcept {
     if (type < 0 || type >= 3) return 0.0f;
-    const auto iter = pheromones_.find(coord);
-    if (iter == pheromones_.end()) return 0.0f;
-    return iter->second.values[type];
+    HexCoord cc = world_to_chunk_coord(coord);
+    auto it = chunks_.find(cc);
+    if (it == chunks_.end()) return 0.0f;
+    auto p_it = it->second->pheromones.find(coord);
+    if (p_it == it->second->pheromones.end()) return 0.0f;
+    return p_it->second.values[type];
 }
 
 void World::add_pheromone(const HexCoord coord, int type, float amount) {
     if (type < 0 || type >= 3) return;
-    pheromones_[coord].values[type] += amount;
-    if (pheromones_[coord].values[type] > 10.0f) pheromones_[coord].values[type] = 10.0f;
+    Chunk& chunk = get_or_create_chunk(coord);
+    chunk.pheromones[coord].values[type] += amount;
+    if (chunk.pheromones[coord].values[type] > 10.0f) chunk.pheromones[coord].values[type] = 10.0f;
 }
 
 void World::decay_pheromones(float decay_factor) {
-    for (auto it = pheromones_.begin(); it != pheromones_.end(); ) {
-        bool all_zero = true;
-        for (int i = 0; i < 3; ++i) {
-            it->second.values[i] *= decay_factor;
-            if (it->second.values[i] < 0.01f) it->second.values[i] = 0.0f;
-            else all_zero = false;
+    for (auto& [cc, chunk] : chunks_) {
+        for (auto it = chunk->pheromones.begin(); it != chunk->pheromones.end(); ) {
+            bool all_zero = true;
+            for (int i = 0; i < 3; ++i) {
+                it->second.values[i] *= decay_factor;
+                if (it->second.values[i] < 0.01f) it->second.values[i] = 0.0f;
+                else all_zero = false;
+            }
+            if (all_zero) it = chunk->pheromones.erase(it);
+            else ++it;
         }
-        if (all_zero) it = pheromones_.erase(it);
-        else ++it;
     }
 }
 
 void World::diffuse_pheromones(float diffusion_rate) {
-    PheromoneMap next_pheromones = pheromones_;
-    
-    for (const auto& [coord, p] : pheromones_) {
-        for (int i = 0; i < 3; ++i) {
-            float spread = p.values[i] * diffusion_rate / 6.0f;
-            if (spread < 0.001f) continue;
-            
-            for (int dir = 0; dir < 6; ++dir) {
-                HexCoord neighbor = hex_neighbor(coord, static_cast<HexDirection>(dir));
-                next_pheromones[neighbor].values[i] += spread;
-                next_pheromones[coord].values[i] -= spread;
+    // Simple diffusion: for each pheromone, spread to neighbors.
+    // In chunked world, we collect updates first to maintain determinism.
+    struct Update { HexCoord coord; int type; float amount; };
+    std::vector<Update> updates;
+
+    for (auto& [cc, chunk] : chunks_) {
+        for (auto& [coord, p] : chunk->pheromones) {
+            for (int i = 0; i < 3; ++i) {
+                float spread = p.values[i] * diffusion_rate / 6.0f;
+                if (spread < 0.001f) continue;
+                for (int dir = 0; dir < 6; ++dir) {
+                    updates.push_back({hex_neighbor(coord, static_cast<HexDirection>(dir)), i, spread});
+                    updates.push_back({coord, i, -spread});
+                }
             }
         }
     }
-    pheromones_ = std::move(next_pheromones);
+    for (const auto& up : updates) add_pheromone(up.coord, up.type, up.amount);
 }
 
 std::vector<HexCoord> World::occupied_coords() const {
     std::vector<HexCoord> coords;
-    coords.reserve(cells_.size());
-    for (const auto& [coord, cell] : cells_) coords.push_back(coord);
+    coords.reserve(total_cells_);
+    for (auto& [cc, chunk] : chunks_) {
+        for (auto& [coord, cell] : chunk->cells) coords.push_back(coord);
+    }
     std::sort(coords.begin(), coords.end(), [](const HexCoord l, const HexCoord r) {
         if (l.q != r.q) return l.q < r.q;
         return l.r < r.r;
@@ -143,8 +191,9 @@ std::vector<HexCoord> World::occupied_coords() const {
 
 std::vector<HexCoord> World::pheromone_coords() const {
     std::vector<HexCoord> coords;
-    coords.reserve(pheromones_.size());
-    for (const auto& [coord, p] : pheromones_) coords.push_back(coord);
+    for (auto& [cc, chunk] : chunks_) {
+        for (auto& [coord, p] : chunk->pheromones) coords.push_back(coord);
+    }
     std::sort(coords.begin(), coords.end(), [](const HexCoord l, const HexCoord r) {
         if (l.q != r.q) return l.q < r.q;
         return l.r < r.r;

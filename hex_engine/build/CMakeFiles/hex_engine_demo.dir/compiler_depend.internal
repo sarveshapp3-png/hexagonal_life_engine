@@ -7,6 +7,7 @@ CMakeFiles/hex_engine_demo.dir/src/main.cpp.o
  /home/ubuntu/hexagonal_life_engine/hex_engine/include/hex_engine/hex_coord.h
  /home/ubuntu/hexagonal_life_engine/hex_engine/include/hex_engine/organism.h
  /home/ubuntu/hexagonal_life_engine/hex_engine/include/hex_engine/simulation.h
+ /home/ubuntu/hexagonal_life_engine/hex_engine/include/hex_engine/species.h
  /home/ubuntu/hexagonal_life_engine/hex_engine/include/hex_engine/world.h
  /usr/include/alloca.h
  /usr/include/asm-generic/errno-base.h

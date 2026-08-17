@@ -21,6 +21,7 @@ target_sources(
         src/scripting.cpp
         src/vision.cpp
         src/brain.cpp
+        src/species.cpp
 )
 target_include_directories(
     hex_engine_core
