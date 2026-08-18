@@ -29,6 +29,9 @@ struct SimulationConfig {
     bool insta_kill = false;
     int lifespan_multiplier = 100;
     int vision_range = 5;
+    
+    float temperature_gradient = 0.02f;
+    float ideal_temperature = 0.5f;
 };
 
 class Simulator {

@@ -9,23 +9,57 @@ namespace hex_engine {
 
 static std::mt19937 g_rng(std::random_device{}());
 
-// --- Genome & Brain Implementation ---
+// --- NeuralNet Implementation ---
 
-void BrainParams::randomize() {
-    std::uniform_int_distribution<int> react_dist(0, 2);
-    for (int i = 0; i <= 8; ++i) {
-        reactions[static_cast<CellKind>(i)] = react_dist(g_rng);
+void NeuralNet::randomize() {
+    std::uniform_int_distribution<int> source_dist(0, kInputCount + kMaxHiddenNodes - 1);
+    std::uniform_int_distribution<int> target_dist(kInputCount, kInputCount + kMaxHiddenNodes + kOutputCount - 1);
+    std::uniform_real_distribution<float> weight_dist(-2.0f, 2.0f);
+
+    synapses.clear();
+    int synapse_count = 10 + (g_rng() % 10);
+    for (int i = 0; i < synapse_count; ++i) {
+        synapses.push_back({source_dist(g_rng), target_dist(g_rng), weight_dist(g_rng)});
     }
 }
 
-void BrainParams::mutate(float rate) {
+void NeuralNet::mutate(float rate) {
     std::uniform_real_distribution<float> dist(0.0f, 1.0f);
-    std::uniform_int_distribution<int> react_dist(0, 2);
-    for (auto& [kind, react] : reactions) {
-        if (dist(g_rng) < rate) {
-            react = react_dist(g_rng);
-        }
+    std::uniform_real_distribution<float> weight_mut(-0.5f, 0.5f);
+    
+    for (auto& s : synapses) {
+        if (dist(g_rng) < rate) s.weight += weight_mut(g_rng);
     }
+
+    if (dist(g_rng) < rate) {
+        // Add synapse
+        std::uniform_int_distribution<int> source_dist(0, kInputCount + kMaxHiddenNodes - 1);
+        std::uniform_int_distribution<int> target_dist(kInputCount, kInputCount + kMaxHiddenNodes + kOutputCount - 1);
+        std::uniform_real_distribution<float> weight_dist(-2.0f, 2.0f);
+        synapses.push_back({source_dist(g_rng), target_dist(g_rng), weight_dist(g_rng)});
+    }
+
+    if (dist(g_rng) < rate && !synapses.empty()) {
+        // Remove synapse
+        synapses.erase(synapses.begin() + (g_rng() % synapses.size()));
+    }
+}
+
+std::vector<float> NeuralNet::process(const std::vector<float>& inputs) const {
+    std::vector<float> nodes(kInputCount + kMaxHiddenNodes + kOutputCount, 0.0f);
+    for (int i = 0; i < kInputCount; ++i) nodes[i] = inputs[i];
+
+    // Simple one-pass feed-forward (assuming nodes are ordered roughly correctly)
+    for (const auto& s : synapses) {
+        nodes[s.target_node] += nodes[s.source_node] * s.weight;
+    }
+
+    // Activation
+    std::vector<float> outputs(kOutputCount);
+    for (int i = 0; i < kOutputCount; ++i) {
+        outputs[i] = std::tanh(nodes[kInputCount + kMaxHiddenNodes + i]);
+    }
+    return outputs;
 }
 
 void Genome::mutate(float rate) {
@@ -67,16 +101,16 @@ void Genome::mutate(float rate) {
 
 float Genome::distance(const Genome& other) const {
     float dist = 0.0f;
-    // Anatomy distance: simple cell count difference + mismatched cells
     dist += std::abs(static_cast<float>(anatomy.size()) - static_cast<float>(other.anatomy.size()));
     
-    // Brain distance: number of different reactions
-    for (auto const& [kind, react] : brain.reactions) {
-        auto it = other.brain.reactions.find(kind);
-        if (it == other.brain.reactions.end() || it->second != react) {
-            dist += 1.0f;
-        }
+    // Neural distance: simple synapse count difference + weight difference
+    dist += std::abs(static_cast<float>(brain.synapses.size()) - static_cast<float>(other.brain.synapses.size()));
+    
+    size_t min_synapses = std::min(brain.synapses.size(), other.brain.synapses.size());
+    for (size_t i = 0; i < min_synapses; ++i) {
+        dist += std::abs(brain.synapses[i].weight - other.brain.synapses[i].weight);
     }
+    
     return dist;
 }
 
@@ -129,14 +163,19 @@ void Organism::take_damage(int amount, const SimulationConfig& config) {
 void Organism::update(World& world, const SimulationConfig& config, OrganismRegistry& registry) {
     age++;
     float gained_energy = 0.0f;
+    
+    // Brain Inputs
+    std::vector<float> brain_inputs(NeuralNet::kInputCount, 0.0f);
+    
     bool has_mover = false;
-    HexCoord move_dir = {0, 0};
-    bool decided_move = false;
+    bool has_eye = false;
+    bool has_sense = false;
+    bool has_signal = false;
 
     for (const auto& ac : genome->anatomy) {
         HexCoord wp = get_world_pos(ac.local_pos);
         if (ac.kind == CellKind::Producer) {
-            gained_energy += config.producer_energy_per_tick;
+            gained_energy += config.producer_energy_per_tick * world.light_at(wp, 0.05f);
         } else if (ac.kind == CellKind::Mouth) {
             for (int i = 0; i < 6; ++i) {
                 HexCoord n = hex_neighbor(wp, static_cast<HexDirection>(i));
@@ -155,46 +194,83 @@ void Organism::update(World& world, const SimulationConfig& config, OrganismRegi
             }
         } else if (ac.kind == CellKind::Mover) {
             has_mover = true;
-        } else if (ac.kind == CellKind::Eye && !decided_move) {
+        } else if (ac.kind == CellKind::Sense) {
+            has_sense = true;
+        } else if (ac.kind == CellKind::Eye && !has_eye) {
+            has_eye = true;
             for (int d = 1; d <= config.vision_range; ++d) {
                 HexCoord look_pos = wp;
                 for(int k=0; k<d; ++k) look_pos = hex_neighbor(look_pos, rotation);
                 CellKind seen = world.kind_at(look_pos);
                 if (seen != CellKind::Empty) {
-                    int reaction = genome->brain.reactions[seen];
-                    if (reaction == 1) { // Chase
-                        move_dir = kHexDirectionOffsets[static_cast<int>(rotation)];
-                        decided_move = true;
-                    } else if (reaction == 2) { // Retreat
-                        HexDirection opp = static_cast<HexDirection>((static_cast<int>(rotation) + 3) % 6);
-                        move_dir = kHexDirectionOffsets[static_cast<int>(opp)];
-                        decided_move = true;
-                    }
+                    brain_inputs[0] = static_cast<float>(seen) / 10.0f; // Normalized kind
+                    brain_inputs[1] = 1.0f - (static_cast<float>(d) / config.vision_range); // Normalized distance
                     break;
                 }
             }
+        } else if (ac.kind == CellKind::Signal) {
+            has_signal = true;
+            // Detect pheromones
+            brain_inputs[5] += world.pheromone_at(wp, 0);
+            brain_inputs[6] += world.pheromone_at(wp, 1);
+            brain_inputs[7] += world.pheromone_at(wp, 2);
         }
     }
 
+    if (has_sense) {
+        brain_inputs[2] = energy / (genome->anatomy.size() * 10.0f); // Normalized energy
+        brain_inputs[3] = static_cast<float>(age) / (genome->anatomy.size() * config.lifespan_multiplier); // Normalized age
+        brain_inputs[4] = world.light_at(position, 0.05f); // Light at center
+    }
+
+    if (!has_eye) { brain_inputs[0] = 0.0f; brain_inputs[1] = 0.0f; }
+    if (!has_signal) { brain_inputs[5] = 0.0f; brain_inputs[6] = 0.0f; brain_inputs[7] = 0.0f; }
+
+    // Process Brain
+    std::vector<float> brain_outputs = genome->brain.process(brain_inputs);
+    
+    // Handle Outputs
     if (has_mover) {
         energy -= config.mover_energy_cost_per_step;
-        if (decided_move) {
-            HexCoord new_pos = {position.q + move_dir.q, position.r + move_dir.r};
+        
+        HexCoord move_offset = {0, 0};
+        if (brain_outputs[0] > 0.5f) { // Move Forward
+            move_offset = kHexDirectionOffsets[static_cast<int>(rotation)];
+        }
+        
+        if (brain_outputs[1] > 0.5f) { // Rotate Left
+            rotation = static_cast<HexDirection>((static_cast<int>(rotation) + 5) % 6);
+        } else if (brain_outputs[2] > 0.5f) { // Rotate Right
+            rotation = static_cast<HexDirection>((static_cast<int>(rotation) + 1) % 6);
+        }
+
+        if (move_offset.q != 0 || move_offset.r != 0) {
+            HexCoord new_pos = {position.q + move_offset.q, position.r + move_offset.r};
             bool collision = false;
             for (const auto& ac : genome->anatomy) {
                 HexCoord wp = {new_pos.q + ac.local_pos.q, new_pos.r + ac.local_pos.r};
                 if (world.contains(wp) && world.kind_at(wp) != CellKind::Food) { collision = true; break; }
             }
             if (!collision) position = new_pos;
-        } else {
-            std::uniform_int_distribution<int> dir_dist(0, 5);
-            HexCoord rm = kHexDirectionOffsets[dir_dist(g_rng)];
-            position = {position.q + rm.q, position.r + rm.r};
+        }
+    }
+
+    if (brain_outputs[4] > 0.5f) { // Emit Signal
+        for (const auto& ac : genome->anatomy) {
+            if (ac.kind == CellKind::Signal) {
+                world.add_pheromone(get_world_pos(ac.local_pos), 0, 1.0f);
+            }
         }
     }
 
     energy += gained_energy;
-    energy -= genome->anatomy.size() * config.base_energy_decay;
+    
+    // Temperature-based decay
+    float dist_from_center = std::sqrt(static_cast<float>(position.q * position.q + position.r * position.r));
+    float temp = 1.0f - (dist_from_center * config.temperature_gradient);
+    float temp_stress = std::abs(temp - config.ideal_temperature);
+    
+    energy -= genome->anatomy.size() * (config.base_energy_decay + temp_stress * 0.1f);
 
     if (energy <= 0.0f || age > genome->anatomy.size() * config.lifespan_multiplier || health <= 0) {
         health = 0;

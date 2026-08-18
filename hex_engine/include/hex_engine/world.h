@@ -57,6 +57,11 @@ public:
     void decay_pheromones(float decay_factor);
     void diffuse_pheromones(float diffusion_rate);
     
+    // Environment
+    [[nodiscard]] float light_at(const HexCoord coord, float gradient_factor) const noexcept;
+    [[nodiscard]] uint32_t total_ticks() const noexcept { return total_ticks_; }
+    void increment_ticks() noexcept { total_ticks_++; }
+
     // Deterministic ordering
     [[nodiscard]] std::vector<HexCoord> occupied_coords() const;
     [[nodiscard]] std::vector<HexCoord> pheromone_coords() const;
@@ -64,6 +69,7 @@ public:
 private:
     ChunkMap chunks_;
     std::size_t total_cells_ = 0;
+    uint32_t total_ticks_ = 0;
 
     Chunk& get_or_create_chunk(const HexCoord coord);
     [[nodiscard]] HexCoord world_to_chunk_coord(const HexCoord coord) const noexcept;

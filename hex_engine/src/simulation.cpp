@@ -84,6 +84,7 @@ void Simulator::tick() {
     // 5. Update Fossil Record
     fossil_record_.update_stats(tick_count_, static_cast<uint32_t>(organism_registry_.organisms().size()));
     
+    world_.increment_ticks();
     ++tick_count_;
 }
 

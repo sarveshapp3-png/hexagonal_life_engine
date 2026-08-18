@@ -201,6 +201,13 @@ std::vector<HexCoord> World::pheromone_coords() const {
     return coords;
 }
 
+float World::light_at(const HexCoord coord, float gradient_factor) const noexcept {
+    // Light varies with the R coordinate (vertical-ish in axial)
+    // Centered at R=0, intensity decreases as |R| increases
+    float intensity = 1.0f - (std::abs(static_cast<float>(coord.r)) * gradient_factor);
+    return std::max(0.0f, intensity);
+}
+
 WorldBounds compute_bounds(const World& world) {
     WorldBounds bounds;
     const std::vector<HexCoord> coords = world.occupied_coords();

@@ -15,9 +15,10 @@ int main() {
     std::cout << "=== Hex Engine Phase 7: Species Tracking & Fossil Record ===\n\n";
 
     SimulationConfig config;
-    config.mutation_rate = 0.3f; // High mutation to see new species
-    config.reproduction_threshold = 4.0f;
-    config.producer_energy_per_tick = 0.8f;
+    config.mutation_rate = 0.5f; // Very high for demo
+    config.reproduction_threshold = 2.0f;
+    config.producer_energy_per_tick = 1.2f;
+    config.base_energy_decay = 0.02f;
     
     Simulator sim(config);
     
@@ -26,9 +27,14 @@ int main() {
     founding_genome->anatomy = {
         {{0, 0}, CellKind::Producer},
         {{1, 0}, CellKind::Mouth},
-        {{0, 1}, CellKind::Mover}
+        {{0, 1}, CellKind::Mover},
+        {{-1, 0}, CellKind::Eye},
+        {{0, -1}, CellKind::Signal},
+        {{1, 1}, CellKind::Sense}
     };
     founding_genome->brain.randomize();
+    // Connect Input 2 (Energy) to Output 3 (Reproduce)
+    founding_genome->brain.synapses.push_back({2, NeuralNet::kInputCount + NeuralNet::kMaxHiddenNodes + 3, 2.0f});
     
     auto initial_species = sim.fossil_record().record_new_species(founding_genome, nullptr, 0);
     

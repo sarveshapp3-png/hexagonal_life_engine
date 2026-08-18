@@ -18,18 +18,29 @@ struct AnatomyCell {
     CellKind kind;
 };
 
-struct BrainParams {
-    // Action to take when seeing a specific CellKind
-    // 0: Ignore, 1: Chase, 2: Retreat
-    std::unordered_map<CellKind, int> reactions;
+struct Synapse {
+    int source_node; // Input or Hidden
+    int target_node; // Hidden or Output
+    float weight;
+};
+
+struct NeuralNet {
+    static constexpr int kInputCount = 8;
+    static constexpr int kOutputCount = 5;
+    static constexpr int kMaxHiddenNodes = 8;
+
+    std::vector<Synapse> synapses;
     
     void randomize();
     void mutate(float rate);
+    
+    // Process inputs and return outputs
+    std::vector<float> process(const std::vector<float>& inputs) const;
 };
 
 struct Genome {
     std::vector<AnatomyCell> anatomy;
-    BrainParams brain;
+    NeuralNet brain;
     
     void mutate(float rate);
     [[nodiscard]] float distance(const Genome& other) const;

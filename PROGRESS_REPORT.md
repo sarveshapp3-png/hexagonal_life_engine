@@ -23,8 +23,13 @@ To match the functional depth of the original Life Engine, the following cell ty
 | **Armor** | A defensive layer that negates incoming damage from killers. |
 | **Eye** | Performs raycasting in the organism's facing direction to detect objects. |
 | **Brain** | A decision-making unit that maps vision data to behavioral reactions. |
+| **Sense** | Detects internal state (Energy, Age) and environmental light. |
+| **Signal** | Detects and emits pheromones for communication. |
 
 ## Evolution and Environmental Emergence
+The engine now features a **Neural Network Brain** that replaces simple reaction maps. Organisms evolve **Synapses** that connect sensory inputs (Vision, Sense, Signal) to motor outputs (Move, Rotate, Reproduce). This allows for the emergence of complex, multi-step behaviors.
+
+Furthermore, the environment now includes **Light and Temperature Gradients**. Producers are light-dependent, and organisms suffer from **Temperature Stress** when venturing too far from ideal zones, creating a dynamic map where location matters for survival.
 
 The engine facilitates true **Natural Selection** through a robust mutation system. During reproduction, offspring have a probability of undergoing **Anatomy Mutation** (adding, removing, or changing cells) and **Brain Mutation** (altering reactions to seen objects). This leads to the emergence of specialized species, such as efficient producers, agile predators, and armored prey.
 
