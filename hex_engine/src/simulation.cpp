@@ -31,7 +31,12 @@ void Simulator::tick() {
         
         if (org->health > 0) {
             // Reproduction
-            if (org->can_reproduce(config_)) {
+            std::vector<float> brain_inputs(NeuralNet::kInputCount, 0.0f);
+            // Re-calculating brain inputs for reproduction check (simplified)
+            brain_inputs[2] = org->energy / (org->genome->anatomy.size() * 10.0f);
+            auto outputs = org->genome->brain.process(brain_inputs);
+            
+            if (org->can_reproduce(config_) && outputs[3] > 0.5f) {
                 auto child_genome = std::make_shared<Genome>(*org->genome);
                 bool mutated = false;
                 std::uniform_real_distribution<float> dist(0.0f, 1.0f);

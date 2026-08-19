@@ -12,9 +12,10 @@ struct Genome;
 
 class Species {
 public:
-    Species(std::string name, std::shared_ptr<Genome> founding_genome, uint32_t start_tick);
+    Species(std::string name, std::shared_ptr<Genome> founding_genome, uint32_t start_tick, std::string ancestor_name = "");
     
     std::string name;
+    std::string ancestor_name;
     std::shared_ptr<Genome> genome;
     uint32_t start_tick;
     uint32_t end_tick = 0;
@@ -37,6 +38,8 @@ public:
     
     const std::unordered_map<std::string, std::shared_ptr<Species>>& extant_species() const { return extant_species_; }
     
+    std::string export_lineage() const;
+
 private:
     std::unordered_map<std::string, std::shared_ptr<Species>> extant_species_;
     std::vector<std::shared_ptr<Species>> extinct_species_;

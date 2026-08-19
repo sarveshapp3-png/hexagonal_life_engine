@@ -25,8 +25,14 @@ To match the functional depth of the original Life Engine, the following cell ty
 | **Brain** | A decision-making unit that maps vision data to behavioral reactions. |
 | **Sense** | Detects internal state (Energy, Age) and environmental light. |
 | **Signal** | Detects and emits pheromones for communication. |
+| **Virus** | Injects its genome into neighboring organisms. |
+| **Scavenger** | Specialized harvester for dead cell energy. |
+| **Explosive** | Detonates when health is low, damaging a large area. |
 
 ## Evolution and Environmental Emergence
+The engine now supports **Lineage Tracking**, allowing us to trace the ancestry of every species back to its founding genome. This "Family Tree" visualization reveals how mutations branch out to create diverse ecological niches.
+
+Furthermore, the introduction of **Parasitic (Virus)** and **Decomposer (Scavenger)** roles has significantly increased the emergent complexity of the ecosystem, leading to predator-prey-parasite cycles. Organisms also suffer from **Temperature Stress** when venturing too far from ideal zones, creating a dynamic map where location matters for survival.
 The engine now features a **Neural Network Brain** that replaces simple reaction maps. Organisms evolve **Synapses** that connect sensory inputs (Vision, Sense, Signal) to motor outputs (Move, Rotate, Reproduce). This allows for the emergence of complex, multi-step behaviors.
 
 Furthermore, the environment now includes **Light and Temperature Gradients**. Producers are light-dependent, and organisms suffer from **Temperature Stress** when venturing too far from ideal zones, creating a dynamic map where location matters for survival.

@@ -19,6 +19,9 @@ enum class CellKind : std::uint8_t {
     Eye,         // Vision cell that will feed the future brain logic.
     Sense,       // Internal state sensor (Energy, Age).
     Signal,      // Pheromone detector/emitter.
+    Virus,       // Injects genome into neighbors.
+    Scavenger,   // Harvests energy from dead cells.
+    Explosive,   // High damage, kills self.
 };
 
 // Human-readable labels are useful immediately for debug output and later for
@@ -47,6 +50,12 @@ enum class CellKind : std::uint8_t {
         return "Sense";
     case CellKind::Signal:
         return "Signal";
+    case CellKind::Virus:
+        return "Virus";
+    case CellKind::Scavenger:
+        return "Scavenger";
+    case CellKind::Explosive:
+        return "Explosive";
     }
 
     // Returning a fallback keeps the function total even if we add new enum
@@ -65,6 +74,9 @@ enum class CellKind : std::uint8_t {
     if (name == "Eye") return CellKind::Eye;
     if (name == "Sense") return CellKind::Sense;
     if (name == "Signal") return CellKind::Signal;
+    if (name == "Virus") return CellKind::Virus;
+    if (name == "Scavenger") return CellKind::Scavenger;
+    if (name == "Explosive") return CellKind::Explosive;
     return CellKind::Empty;
 }
 

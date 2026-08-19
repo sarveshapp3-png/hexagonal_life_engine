@@ -210,10 +210,47 @@ void Organism::update(World& world, const SimulationConfig& config, OrganismRegi
             }
         } else if (ac.kind == CellKind::Signal) {
             has_signal = true;
-            // Detect pheromones
             brain_inputs[5] += world.pheromone_at(wp, 0);
             brain_inputs[6] += world.pheromone_at(wp, 1);
             brain_inputs[7] += world.pheromone_at(wp, 2);
+        } else if (ac.kind == CellKind::Virus) {
+            for (int i = 0; i < 6; ++i) {
+                HexCoord n = hex_neighbor(wp, static_cast<HexDirection>(i));
+                auto target = registry.get_organism_at(n);
+                if (target && target.get() != this) {
+                    std::uniform_real_distribution<float> v_dist(0.0f, 1.0f);
+                    if (v_dist(g_rng) < config.virus_infection_chance) {
+                        target->genome = genome;
+                        target->species = species;
+                    }
+                }
+            }
+        } else if (ac.kind == CellKind::Scavenger) {
+            for (int i = 0; i < 6; ++i) {
+                HexCoord n = hex_neighbor(wp, static_cast<HexDirection>(i));
+                if (world.kind_at(n) == CellKind::Food) {
+                    float harvested = world.energy_at(n) * 1.5f; // Scavengers are more efficient
+                    gained_energy += harvested;
+                    world.clear_cell(n);
+                }
+            }
+        } else if (ac.kind == CellKind::Explosive) {
+            if (health < static_cast<int>(genome->anatomy.size()) / 2) {
+                // Explode!
+                for (int q = -config.explosive_radius; q <= config.explosive_radius; ++q) {
+                    for (int r = -config.explosive_radius; r <= config.explosive_radius; ++r) {
+                        HexCoord target_pos = {wp.q + q, wp.r + r};
+                        if (hex_distance(wp, target_pos) <= config.explosive_radius) {
+                            auto target = registry.get_organism_at(target_pos);
+                            if (target && target.get() != this) {
+                                target->take_damage(static_cast<int>(config.explosive_damage), config);
+                            }
+                            if (world.kind_at(target_pos) == CellKind::Food) world.clear_cell(target_pos);
+                        }
+                    }
+                }
+                health = 0; // Kills self
+            }
         }
     }
 
@@ -253,6 +290,10 @@ void Organism::update(World& world, const SimulationConfig& config, OrganismRegi
             }
             if (!collision) position = new_pos;
         }
+    }
+
+    if (brain_outputs[3] > 0.5f) { // Reproduce
+        // This is handled by the Simulator, but we could set a flag here
     }
 
     if (brain_outputs[4] > 0.5f) { // Emit Signal

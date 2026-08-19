@@ -30,11 +30,14 @@ int main() {
         {{0, 1}, CellKind::Mover},
         {{-1, 0}, CellKind::Eye},
         {{0, -1}, CellKind::Signal},
-        {{1, 1}, CellKind::Sense}
+        {{1, 1}, CellKind::Sense},
+        {{-1, -1}, CellKind::Virus}
     };
     founding_genome->brain.randomize();
     // Connect Input 2 (Energy) to Output 3 (Reproduce)
     founding_genome->brain.synapses.push_back({2, NeuralNet::kInputCount + NeuralNet::kMaxHiddenNodes + 3, 2.0f});
+    // Connect Input 0 (Vision Kind) to Output 0 (Move)
+    founding_genome->brain.synapses.push_back({0, NeuralNet::kInputCount + NeuralNet::kMaxHiddenNodes + 0, 1.5f});
     
     auto initial_species = sim.fossil_record().record_new_species(founding_genome, nullptr, 0);
     
@@ -63,5 +66,7 @@ int main() {
     }
 
     std::cout << "\n=== Species Evolution Verified ===\n";
+    std::cout << "Lineage Tree (DOT format):\n";
+    std::cout << sim.fossil_record().export_lineage() << "\n";
     return 0;
 }

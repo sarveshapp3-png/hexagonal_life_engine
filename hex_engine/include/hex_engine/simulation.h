@@ -32,6 +32,10 @@ struct SimulationConfig {
     
     float temperature_gradient = 0.02f;
     float ideal_temperature = 0.5f;
+    
+    float virus_infection_chance = 0.05f;
+    int explosive_radius = 2;
+    float explosive_damage = 50.0f;
 };
 
 class Simulator {
