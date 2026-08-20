@@ -179,11 +179,15 @@ void Organism::update(World& world, const SimulationConfig& config, OrganismRegi
         } else if (ac.kind == CellKind::Mouth) {
             for (int i = 0; i < 6; ++i) {
                 HexCoord n = hex_neighbor(wp, static_cast<HexDirection>(i));
-                if (world.kind_at(n) == CellKind::Food) {
+                CellKind target_kind = world.kind_at(n);
+                if (target_kind == CellKind::Food) {
                     float harvested = world.energy_at(n) * config.mouth_harvest_efficiency;
                     gained_energy += harvested;
                     world.add_energy(n, -harvested);
                     if (world.energy_at(n) < 0.1f) world.clear_cell(n);
+                } else if (target_kind == CellKind::Poison) {
+                    take_damage(static_cast<int>(config.poison_damage), config);
+                    world.clear_cell(n);
                 }
             }
         } else if (ac.kind == CellKind::Killer) {
@@ -288,7 +292,17 @@ void Organism::update(World& world, const SimulationConfig& config, OrganismRegi
                 HexCoord wp = {new_pos.q + ac.local_pos.q, new_pos.r + ac.local_pos.r};
                 if (world.contains(wp) && world.kind_at(wp) != CellKind::Food) { collision = true; break; }
             }
-            if (!collision) position = new_pos;
+            if (!collision) {
+                // Check for Wall collision
+                bool hit_wall = false;
+                for (const auto& child_ac : genome->anatomy) {
+                    if (world.kind_at({new_pos.q + child_ac.local_pos.q, new_pos.r + child_ac.local_pos.r}) == CellKind::Wall) {
+                        hit_wall = true;
+                        break;
+                    }
+                }
+                if (!hit_wall) position = new_pos;
+            }
         }
     }
 

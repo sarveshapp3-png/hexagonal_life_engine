@@ -36,6 +36,10 @@ struct SimulationConfig {
     float virus_infection_chance = 0.05f;
     int explosive_radius = 2;
     float explosive_damage = 50.0f;
+    
+    float food_spawn_prob = 0.05f;
+    float food_spawn_energy = 10.0f;
+    float poison_damage = 10.0f;
 };
 
 class Simulator {

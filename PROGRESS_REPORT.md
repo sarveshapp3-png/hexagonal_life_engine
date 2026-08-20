@@ -28,8 +28,11 @@ To match the functional depth of the original Life Engine, the following cell ty
 | **Virus** | Injects its genome into neighboring organisms. |
 | **Scavenger** | Specialized harvester for dead cell energy. |
 | **Explosive** | Detonates when health is low, damaging a large area. |
+| **Wall** | Indestructible blocker that restricts movement. |
+| **Poison** | Lethal hazard that damages organisms when eaten. |
 
 ## Evolution and Environmental Emergence
+The environment now features **Global Food Spawning**, creating a dynamic resource landscape that encourages nomadic behavior. To counter this, **Walls** and **Poison** have been introduced, forcing organisms to evolve spatial awareness and sensory discrimination.
 The engine now supports **Lineage Tracking**, allowing us to trace the ancestry of every species back to its founding genome. This "Family Tree" visualization reveals how mutations branch out to create diverse ecological niches.
 
 Furthermore, the introduction of **Parasitic (Virus)** and **Decomposer (Scavenger)** roles has significantly increased the emergent complexity of the ecosystem, leading to predator-prey-parasite cycles. Organisms also suffer from **Temperature Stress** when venturing too far from ideal zones, creating a dynamic map where location matters for survival.

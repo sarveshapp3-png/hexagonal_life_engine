@@ -49,7 +49,14 @@ int main() {
         org->sync_to_world(sim.world());
     }
 
+    // Add some Walls and Poison
+    for(int i=-10; i<=10; ++i) {
+        sim.world().set_cell({i, -10}, CellKind::Wall);
+        sim.world().set_cell({i, 10}, CellKind::Poison);
+    }
+
     std::cout << "Starting simulation with 1 species: " << initial_species->name << "\n";
+    std::cout << "Added Wall at R=-10, Poison at R=10\n";
 
     for (int i = 0; i < 100; ++i) {
         sim.tick();

@@ -22,6 +22,7 @@ enum class CellKind : std::uint8_t {
     Virus,       // Injects genome into neighbors.
     Scavenger,   // Harvests energy from dead cells.
     Explosive,   // High damage, kills self.
+    Poison,      // Damages consumer.
 };
 
 // Human-readable labels are useful immediately for debug output and later for
@@ -56,6 +57,8 @@ enum class CellKind : std::uint8_t {
         return "Scavenger";
     case CellKind::Explosive:
         return "Explosive";
+    case CellKind::Poison:
+        return "Poison";
     }
 
     // Returning a fallback keeps the function total even if we add new enum
@@ -77,6 +80,7 @@ enum class CellKind : std::uint8_t {
     if (name == "Virus") return CellKind::Virus;
     if (name == "Scavenger") return CellKind::Scavenger;
     if (name == "Explosive") return CellKind::Explosive;
+    if (name == "Poison") return CellKind::Poison;
     return CellKind::Empty;
 }
 

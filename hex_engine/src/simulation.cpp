@@ -86,7 +86,17 @@ void Simulator::tick() {
     world_.diffuse_pheromones(0.1f);
     world_.decay_pheromones(0.95f);
     
-    // 5. Update Fossil Record
+    // 5. Global Food Spawning
+    std::uniform_real_distribution<float> f_dist(0.0f, 1.0f);
+    if (f_dist(g_rng) < config_.food_spawn_prob) {
+        std::uniform_int_distribution<int> pos_dist(-20, 20);
+        HexCoord food_pos = {pos_dist(g_rng), pos_dist(g_rng)};
+        if (world_.kind_at(food_pos) == CellKind::Empty) {
+            world_.set_cell_with_energy(food_pos, CellKind::Food, config_.food_spawn_energy);
+        }
+    }
+
+    // 6. Update Fossil Record
     fossil_record_.update_stats(tick_count_, static_cast<uint32_t>(organism_registry_.organisms().size()));
     
     world_.increment_ticks();
