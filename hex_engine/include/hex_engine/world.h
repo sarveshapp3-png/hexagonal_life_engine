@@ -19,7 +19,7 @@ struct Cell final {
 };
 
 struct Pheromones final {
-    float values[3] = {0.0f, 0.0f, 0.0f};
+    std::array<float, 3> values = {0.0f, 0.0f, 0.0f};
 };
 
 // A Chunk represents a fixed-size region of the world for optimization.

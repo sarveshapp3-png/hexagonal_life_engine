@@ -32,8 +32,9 @@ To match the functional depth of the original Life Engine, the following cell ty
 | **Poison** | Lethal hazard that damages organisms when eaten. |
 
 ## Evolution and Environmental Emergence
-The environment now features **Global Food Spawning**, creating a dynamic resource landscape that encourages nomadic behavior. To counter this, **Walls** and **Poison** have been introduced, forcing organisms to evolve spatial awareness and sensory discrimination.
-The engine now supports **Lineage Tracking**, allowing us to trace the ancestry of every species back to its founding genome. This "Family Tree" visualization reveals how mutations branch out to create diverse ecological niches.
+The ecosystem has reached a peak level of complexity with the introduction of **Sexual Reproduction (Gene Crossover)**. Organisms can now exchange genetic material with mates, leading to rapid trait recombination and hybrid species. This is complemented by a **Dynamic Disaster System** (Radiation, Blight, Solar Flares) that periodically shifts the selective pressures of the world.
+
+The environment also features **Global Food Spawning**, creating a dynamic resource landscape that encourages nomadic behavior. To counter this, **Walls** and **Poison** have been introduced, forcing organisms to evolve spatial awareness and sensory discrimination. The engine supports deep **Lineage Tracking**, allowing us to trace the ancestry of every species back to its founding genome through directed family trees.
 
 Furthermore, the introduction of **Parasitic (Virus)** and **Decomposer (Scavenger)** roles has significantly increased the emergent complexity of the ecosystem, leading to predator-prey-parasite cycles. Organisms also suffer from **Temperature Stress** when venturing too far from ideal zones, creating a dynamic map where location matters for survival.
 The engine now features a **Neural Network Brain** that replaces simple reaction maps. Organisms evolve **Synapses** that connect sensory inputs (Vision, Sense, Signal) to motor outputs (Move, Rotate, Reproduce). This allows for the emergence of complex, multi-step behaviors.

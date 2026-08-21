@@ -57,15 +57,30 @@ int main() {
 
     std::cout << "Starting simulation with 1 species: " << initial_species->name << "\n";
     std::cout << "Added Wall at R=-10, Poison at R=10\n";
+    std::cout << "Sexual Reproduction: ENABLED\n";
+    std::cout << "Dynamic Disasters: ENABLED\n\n";
 
-    for (int i = 0; i < 100; ++i) {
+    for (int i = 0; i < 200; ++i) {
         sim.tick();
         
+        auto disaster = sim.current_disaster();
+        if (disaster != Simulator::DisasterType::None && sim.disaster_timer() == config.disaster_duration - 1) {
+            std::string d_name = "Unknown";
+            if (disaster == Simulator::DisasterType::Radiation) d_name = "RADIATION (High Mutation)";
+            else if (disaster == Simulator::DisasterType::Blight) d_name = "BLIGHT (Low Production)";
+            else if (disaster == Simulator::DisasterType::SolarFlare) d_name = "SOLAR FLARE (Blinded Eyes)";
+            std::cout << ">>> DISASTER STARTED: " << d_name << " at Tick " << i << "\n";
+        }
+
         if (i % 20 == 0) {
             std::cout << "Tick " << i << ": " 
                       << sim.registry().organisms().size() << " orgs, "
                       << sim.fossil_record().extant_species().size() << " extant species.\n";
             
+            if (sim.current_disaster() != Simulator::DisasterType::None) {
+                std::cout << "  [Disaster Active: " << static_cast<int>(sim.current_disaster()) << " for " << sim.disaster_timer() << " ticks]\n";
+            }
+
             for (const auto& [name, species] : sim.fossil_record().extant_species()) {
                 std::cout << "  - " << name << ": pop " << species->population << "\n";
             }

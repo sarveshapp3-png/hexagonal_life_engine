@@ -114,6 +114,29 @@ float Genome::distance(const Genome& other) const {
     return dist;
 }
 
+Genome Genome::crossover(const Genome& p1, const Genome& p2) {
+    Genome child;
+    
+    // Anatomy crossover: pick a split point
+    size_t split_a = g_rng() % std::min(p1.anatomy.size(), p2.anatomy.size());
+    for (size_t i = 0; i < split_a; ++i) child.anatomy.push_back(p1.anatomy[i]);
+    for (size_t i = split_a; i < p2.anatomy.size(); ++i) {
+        // Only add if not overlapping
+        bool occupied = false;
+        for (const auto& c : child.anatomy) {
+            if (c.local_pos == p2.anatomy[i].local_pos) { occupied = true; break; }
+        }
+        if (!occupied) child.anatomy.push_back(p2.anatomy[i]);
+    }
+
+    // Neural crossover: combine synapses
+    size_t split_n = g_rng() % std::min(p1.brain.synapses.size(), p2.brain.synapses.size() + 1);
+    for (size_t i = 0; i < split_n; ++i) child.brain.synapses.push_back(p1.brain.synapses[i]);
+    for (size_t i = split_n; i < p2.brain.synapses.size(); ++i) child.brain.synapses.push_back(p2.brain.synapses[i]);
+
+    return child;
+}
+
 // --- Organism Implementation ---
 
 Organism::Organism(HexCoord pos, std::shared_ptr<Genome> gen, std::shared_ptr<Species> spec)

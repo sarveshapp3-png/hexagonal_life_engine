@@ -5,30 +5,26 @@
 #include <cstdint>
 #include <functional>
 #include <ostream>
+#include <string_view>
+#include <compare>
 
 namespace hex_engine {
 
-// Axial hex coordinates keep the math compact while still matching the
-// symmetrical structure we need for a future pointy-top renderer.
+/**
+ * @brief Axial hex coordinates for a flat-topped hexagonal grid.
+ * q: axial column, r: axial row.
+ */
 struct HexCoord final {
-    int q = 0; // Axial column coordinate.
-    int r = 0; // Axial row coordinate.
+    int q = 0;
+    int r = 0;
 
-    // The third cube coordinate is derived instead of stored, which keeps the
-    // representation small and avoids duplicated state.
-    [[nodiscard]] constexpr int s() const noexcept {
-        return -q - r;
-    }
+    [[nodiscard]] constexpr int s() const noexcept { return -q - r; }
 
-    // A tiny helper for local offsets, which we use everywhere that needs a
-    // deterministic translation in hex space.
     [[nodiscard]] constexpr HexCoord translated(const int dq, const int dr) const noexcept {
         return HexCoord{q + dq, r + dr};
     }
 
-    // Equality is structural, so the default generated comparison is exactly
-    // what we want.
-    [[nodiscard]] constexpr bool operator==(const HexCoord&) const noexcept = default;
+    [[nodiscard]] constexpr auto operator<=>(const HexCoord&) const noexcept = default;
 };
 
 // Stable direction ordering matters because simulation logic, user input, and

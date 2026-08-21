@@ -40,6 +40,13 @@ struct SimulationConfig {
     float food_spawn_prob = 0.05f;
     float food_spawn_energy = 10.0f;
     float poison_damage = 10.0f;
+    
+    bool sexual_reproduction = true;
+    float mate_search_radius = 3.0f;
+    float kinship_threshold = 5.0f; // Max genetic distance to mate
+    
+    float disaster_chance = 0.005f; // Chance per tick
+    int disaster_duration = 50;
 };
 
 class Simulator {
@@ -57,6 +64,10 @@ public:
 
     void tick();
     
+    enum class DisasterType { None, Radiation, Blight, SolarFlare };
+    [[nodiscard]] DisasterType current_disaster() const noexcept { return current_disaster_; }
+    [[nodiscard]] int disaster_timer() const noexcept { return disaster_timer_; }
+
     [[nodiscard]] std::uint32_t tick_count() const noexcept { return tick_count_; }
     [[nodiscard]] const SimulationConfig& config() const noexcept { return config_; }
     void set_config(const SimulationConfig& config) noexcept { config_ = config; }
@@ -67,6 +78,9 @@ private:
     std::uint32_t tick_count_ = 0;
     OrganismRegistry organism_registry_;
     FossilRecord fossil_record_;
+    
+    DisasterType current_disaster_ = DisasterType::None;
+    int disaster_timer_ = 0;
 };
 
 } // namespace hex_engine

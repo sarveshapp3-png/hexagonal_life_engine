@@ -44,6 +44,7 @@ struct Genome {
     
     void mutate(float rate);
     [[nodiscard]] float distance(const Genome& other) const;
+    [[nodiscard]] static Genome crossover(const Genome& p1, const Genome& p2);
 };
 
 class Organism {
