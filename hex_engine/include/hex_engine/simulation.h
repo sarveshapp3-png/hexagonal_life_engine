@@ -26,6 +26,11 @@ struct SimulationConfig {
     float parent_energy_cost = 1.0f;     // per cell
     
     float mutation_rate = 0.1f;
+    float mutation_add_prob = 0.33f;
+    float mutation_remove_prob = 0.33f;
+    float mutation_change_prob = 0.33f;
+    float mutation_global_mutability = 0.05f;
+
     bool insta_kill = false;
     int lifespan_multiplier = 100;
     int vision_range = 5;
@@ -47,6 +52,10 @@ struct SimulationConfig {
     
     float disaster_chance = 0.005f; // Chance per tick
     int disaster_duration = 50;
+    int season_length = 500;
+    
+    enum class WorldPreset { Default, Lush, Desert, BattleRoyale };
+    WorldPreset world_preset = WorldPreset::Default;
 };
 
 class Simulator {
@@ -68,6 +77,9 @@ public:
     [[nodiscard]] DisasterType current_disaster() const noexcept { return current_disaster_; }
     [[nodiscard]] int disaster_timer() const noexcept { return disaster_timer_; }
 
+    enum class Season { Spring, Summer, Autumn, Winter };
+    [[nodiscard]] Season current_season() const noexcept;
+    
     [[nodiscard]] std::uint32_t tick_count() const noexcept { return tick_count_; }
     [[nodiscard]] const SimulationConfig& config() const noexcept { return config_; }
     void set_config(const SimulationConfig& config) noexcept { config_ = config; }

@@ -1,33 +1,24 @@
 # Hex Engine Roadmap
 
-This is the staged path from the current scaffold to a complete remake.
+The development of the Hexagonal Life Engine is structured into distinct phases, moving from a mathematical foundation to a complex biological and environmental simulation. This roadmap outlines the progression from the initial scaffold to a fully realized remake.
 
-## Phase 1
+### Completed Development Phases
 
-- Keep the codebase ultra basic.
-- Lock the hex coordinate and world container behavior.
-- Keep the save inspector and sample data in sync.
+The following table summarizes the milestones achieved during the foundation and simulation build-out.
 
-## Phase 2
+| Phase | Title | Key Achievements |
+|-------|-------|------------------|
+| **1** | **Foundation** | Established axial hex coordinate math, six-way neighbor logic, and sparse world storage. |
+| **2** | **Core Simulation** | Implemented deterministic ticks, basic metabolism (Producer/Mouth/Mover), and Lua configuration. |
+| **3** | **Advanced Biology** | Added multi-cellular organisms, Neural Network brains, Sexual Reproduction, and Gene Crossover. |
+| **4** | **Environmental Dynamics** | Implemented gradients (Light/Temp), Pheromones, Hazards (Wall/Poison), Disasters, and Seasons. |
 
-- Add deterministic tick processing.
-- Add basic organism interactions.
-- Add Lua-loaded mutation and rule tables.
+### Current and Future Objectives
 
-## Phase 3
+We are currently transitioning into **Phase 5: Rendering & UI**, which focuses on the visual presentation and interactive dashboard of the engine.
 
-- Add an OpenGL renderer.
-- Draw the hex world with a custom dark dashboard UI.
-- Mirror the Life Engine information layout from [[The Life Engine Research]].
+> **Phase 5: Rendering & UI (Active)**
+> The primary goal is to implement an OpenGL-based hex world renderer and a custom dark dashboard UI. This interface will mirror the original Life Engine's layout, providing real-time statistics, population charts, and species lineage visualization. We will also introduce a Genome Editor to allow for the manual creation and testing of organisms.
 
-## Phase 4
-
-- Add world persistence.
-- Add the genome editor workflow.
-- Add statistics and community browsing surfaces.
-
-## Phase 5
-
-- Flesh out advanced organism brains, vision, reproduction, and sharing.
-- Add performance optimizations only after correctness is stable.
-
+> **Phase 6: Scale & Polish (Planned)**
+> Once the visual layer is stable, we will focus on performance optimizations for massive world sizes, including multi-threaded tick processing and refined chunking logic. We also plan to support community creation sharing through a standardized JSON format.

@@ -9,6 +9,11 @@ Simulator::Simulator(SimulationConfig config)
     : config_(config), tick_count_(0) {
 }
 
+Simulator::Season Simulator::current_season() const noexcept {
+    uint32_t cycle = tick_count_ / config_.season_length;
+    return static_cast<Season>(cycle % 4);
+}
+
 void Simulator::tick() {
     // 0. Update Disaster State
     if (disaster_timer_ > 0) {
@@ -23,8 +28,20 @@ void Simulator::tick() {
         }
     }
 
-    // Apply disaster modifiers to a local config copy
+    // Apply seasonal and disaster modifiers to a local config copy
     SimulationConfig current_config = config_;
+    
+    Season season = current_season();
+    if (season == Season::Summer) {
+        current_config.producer_energy_per_tick *= 1.2f;
+    } else if (season == Season::Winter) {
+        current_config.producer_energy_per_tick *= 0.5f;
+        current_config.food_spawn_prob *= 0.2f;
+        current_config.base_energy_decay *= 1.5f;
+    } else if (season == Season::Spring) {
+        current_config.food_spawn_prob *= 2.0f;
+    }
+
     if (current_disaster_ == DisasterType::Radiation) {
         current_config.mutation_rate *= 5.0f;
     } else if (current_disaster_ == DisasterType::Blight) {
@@ -84,7 +101,7 @@ void Simulator::tick() {
                     child_genome = std::make_shared<Genome>(*org->genome);
                     std::uniform_real_distribution<float> dist(0.0f, 1.0f);
                     if (dist(g_rng) < current_config.mutation_rate) {
-                        child_genome->mutate(current_config.mutation_rate);
+                        child_genome->mutate(current_config);
                         mutated = true;
                     }
                 }
@@ -143,6 +160,27 @@ void Simulator::tick() {
     fossil_record_.update_stats(tick_count_, static_cast<uint32_t>(organism_registry_.organisms().size()));
     
     world_.increment_ticks();
+    
+    // 7. Battle Royale Shrinking
+    if (config_.world_preset == SimulationConfig::WorldPreset::BattleRoyale) {
+        int safe_radius = 100 - static_cast<int>(tick_count_ / 10);
+        if (safe_radius < 5) safe_radius = 5;
+        
+        for (auto& org : next_gen_organisms) {
+            if (hex_distance({0,0}, org->position) > safe_radius) {
+                org->take_damage(10, current_config);
+            }
+        }
+        
+        // Clear non-organism cells outside radius
+        auto coords = world_.occupied_coords();
+        for (const auto& c : coords) {
+            if (hex_distance({0,0}, c) > safe_radius) {
+                world_.clear_cell(c);
+            }
+        }
+    }
+
     ++tick_count_;
 }
 

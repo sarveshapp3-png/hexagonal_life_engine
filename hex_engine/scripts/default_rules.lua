@@ -19,6 +19,28 @@ return {
     parent_energy_cost = 4.0,          -- Increased from 3.0
     
     -- Evolution Rules
-    mutation_rate = 0.15,              -- Increased from 0.1
-    energy_variance = 0.25             -- Increased from 0.2
+    mutation_rate = 0.1,
+    mutation_add_prob = 0.33,
+    mutation_remove_prob = 0.33,
+    mutation_change_prob = 0.34,
+    mutation_global_mutability = 0.05,
+
+    -- Environment
+    food_spawn_prob = 0.05,
+    food_spawn_energy = 10.0,
+    poison_damage = 10.0,
+    
+    -- Hazards
+    virus_infection_chance = 0.05,
+    explosive_radius = 2,
+    explosive_damage = 50.0,
+    
+    -- Evolution (Advanced)
+    sexual_reproduction = true,
+    mate_search_radius = 3.0,
+    kinship_threshold = 5.0,
+    
+    -- Disasters
+    disaster_chance = 0.005,
+    disaster_duration = 50
 }

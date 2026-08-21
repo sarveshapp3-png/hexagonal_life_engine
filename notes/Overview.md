@@ -4,28 +4,28 @@ This vault tracks the hexagonal remake of [[Project Brief The Life Engine Hex]].
 
 ## Current State
 
-- The project starts with a very small C++20 core in [[Architecture/Hex Engine Architecture]].
-- The first simulation seam is [[Systems/Hex Simulation Core]], built around axial hex coordinates.
-- A tiny C# tool lives in [[Features/Initial Scaffold]] so save data can be inspected early.
-- The first development choices are recorded in [[Decisions/Foundation Decisions]].
-- Lua packaging rules are recorded in [[Decisions/Lua Runtime Strategy]].
-- The staged build-out lives in [[Roadmap/Hex Engine Roadmap]].
-- The branding reference lives in [[Branding/Life Engine Logo]].
-- The practical install checklist lives in [[Checklist/Laptop And Project Setup]].
+The project has evolved into a highly sophisticated evolutionary sandbox, achieving functional parity with the most advanced mods of the original Life Engine.
+
+- **Core Engine**: C++20 core with deterministic tick processing and axial hex coordinates. [[Architecture/Hex Engine Architecture]]
+- **Biological Systems**: Advanced multi-cellular organisms with genomes, anatomy, and unified energy pooling. [[Systems/Advanced Cells]]
+- **Neural Evolution**: Feed-forward neural network brains with evolvable synapses and sensory gating. [[Systems/Neural Evolution]]
+- **Reproduction**: Both asexual cloning and sexual reproduction (gene crossover) with kinship recognition. [[Systems/Reproduction]]
+- **Environment**: Dynamic environmental gradients (light, temperature), pheromone grids, and seasonal cycles. [[Systems/Environment]]
+- **Species Tracking**: Real-time fossil record with lineage tracking and DOT format export.
+- **Optimization**: Sparse world storage with Chunk-based spatial partitioning. [[Architecture/Technical Details]]
 
 ## Intent
 
-The project is being grown in small steps on purpose:
+The project follows a staged growth model:
 
-1. Prove the hex math and world container.
-2. Add deterministic simulation rules.
-3. Add rendering.
-4. Add editor and tooling seams.
-5. Fill in the full Life Engine feature set without breaking the foundation.
+1. **Phase 1: Foundation** - Hex math, world container, and basic cells. (COMPLETED)
+2. **Phase 2: Simulation** - Deterministic rules, metabolism, and basic evolution. (COMPLETED)
+3. **Phase 3: Advanced Biology** - Neural brains, sexual reproduction, and specialized cell roles. (COMPLETED)
+4. **Phase 4: Environmental Dynamics** - Gradients, disasters, seasons, and world presets. (COMPLETED)
+5. **Phase 5: Rendering & UI** - OpenGL renderer and real-time dashboard. (IN PROGRESS)
 
 ## Source Material
 
 - [[Project Brief The Life Engine Hex]]
-- [[Synthetic Lab Design]]
-- [[The Life Engine Research]]
-- [[Branding/Life Engine Logo]]
+- [The Life Engine Official Website](https://thelifeengine.net)
+- [Original Life Engine GitHub Repository](https://github.com/MaxRobinsonTheGreat/LifeEngine)

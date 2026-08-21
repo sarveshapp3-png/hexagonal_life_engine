@@ -47,6 +47,14 @@ bool Scripting::load_config(SimulationConfig& config, const std::filesystem::pat
         lua_pop(state_->L, 1);
     };
 
+    auto get_int = [&](const char* key, int& val) {
+        lua_getfield(state_->L, -1, key);
+        if (lua_isnumber(state_->L, -1)) {
+            val = static_cast<int>(lua_tointeger(state_->L, -1));
+        }
+        lua_pop(state_->L, 1);
+    };
+
     auto get_bool = [&](const char* key, bool& val) {
         lua_getfield(state_->L, -1, key);
         if (lua_isboolean(state_->L, -1)) {
@@ -69,6 +77,32 @@ bool Scripting::load_config(SimulationConfig& config, const std::filesystem::pat
     get_float("parent_energy_cost", config.parent_energy_cost);
 
     get_float("mutation_rate", config.mutation_rate);
+    get_float("mutation_add_prob", config.mutation_add_prob);
+    get_float("mutation_remove_prob", config.mutation_remove_prob);
+    get_float("mutation_change_prob", config.mutation_change_prob);
+    get_float("mutation_global_mutability", config.mutation_global_mutability);
+
+    get_bool("insta_kill", config.insta_kill);
+    get_int("lifespan_multiplier", config.lifespan_multiplier);
+    get_int("vision_range", config.vision_range);
+
+    get_float("temperature_gradient", config.temperature_gradient);
+    get_float("ideal_temperature", config.ideal_temperature);
+
+    get_float("virus_infection_chance", config.virus_infection_chance);
+    get_int("explosive_radius", config.explosive_radius);
+    get_float("explosive_damage", config.explosive_damage);
+
+    get_float("food_spawn_prob", config.food_spawn_prob);
+    get_float("food_spawn_energy", config.food_spawn_energy);
+    get_float("poison_damage", config.poison_damage);
+
+    get_bool("sexual_reproduction", config.sexual_reproduction);
+    get_float("mate_search_radius", config.mate_search_radius);
+    get_float("kinship_threshold", config.kinship_threshold);
+
+    get_float("disaster_chance", config.disaster_chance);
+    get_int("disaster_duration", config.disaster_duration);
 
     lua_pop(state_->L, 1); // Pop the table
     return true;

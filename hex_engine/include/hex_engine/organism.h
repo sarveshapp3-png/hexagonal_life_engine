@@ -31,9 +31,8 @@ struct NeuralNet {
 
     std::vector<Synapse> synapses;
     
-    void randomize();
-    void mutate(float rate);
-    
+        void randomize();
+    void mutate(const struct SimulationConfig& config);
     // Process inputs and return outputs
     std::vector<float> process(const std::vector<float>& inputs) const;
 };
@@ -42,7 +41,7 @@ struct Genome {
     std::vector<AnatomyCell> anatomy;
     NeuralNet brain;
     
-    void mutate(float rate);
+    void mutate(const struct SimulationConfig& config);
     [[nodiscard]] float distance(const Genome& other) const;
     [[nodiscard]] static Genome crossover(const Genome& p1, const Genome& p2);
 };

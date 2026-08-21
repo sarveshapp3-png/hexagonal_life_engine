@@ -23,15 +23,15 @@ void NeuralNet::randomize() {
     }
 }
 
-void NeuralNet::mutate(float rate) {
+void NeuralNet::mutate(const SimulationConfig& config) {
     std::uniform_real_distribution<float> dist(0.0f, 1.0f);
-    std::uniform_real_distribution<float> weight_mut(-0.5f, 0.5f);
+    std::uniform_real_distribution<float> weight_mut(-config.mutation_global_mutability, config.mutation_global_mutability);
     
     for (auto& s : synapses) {
-        if (dist(g_rng) < rate) s.weight += weight_mut(g_rng);
+        if (dist(g_rng) < config.mutation_rate) s.weight += weight_mut(g_rng);
     }
 
-    if (dist(g_rng) < rate) {
+    if (dist(g_rng) < config.mutation_rate) {
         // Add synapse
         std::uniform_int_distribution<int> source_dist(0, kInputCount + kMaxHiddenNodes - 1);
         std::uniform_int_distribution<int> target_dist(kInputCount, kInputCount + kMaxHiddenNodes + kOutputCount - 1);
@@ -39,7 +39,7 @@ void NeuralNet::mutate(float rate) {
         synapses.push_back({source_dist(g_rng), target_dist(g_rng), weight_dist(g_rng)});
     }
 
-    if (dist(g_rng) < rate && !synapses.empty()) {
+    if (dist(g_rng) < config.mutation_rate && !synapses.empty()) {
         // Remove synapse
         synapses.erase(synapses.begin() + (g_rng() % synapses.size()));
     }
@@ -62,41 +62,56 @@ std::vector<float> NeuralNet::process(const std::vector<float>& inputs) const {
     return outputs;
 }
 
-void Genome::mutate(float rate) {
+void Genome::mutate(const SimulationConfig& config) {
     std::uniform_real_distribution<float> dist(0.0f, 1.0f);
-
-    if (dist(g_rng) < rate && !anatomy.empty()) {
-        std::uniform_int_distribution<size_t> idx_dist(0, anatomy.size() - 1);
-        size_t idx = idx_dist(g_rng);
-        std::uniform_int_distribution<int> kind_dist(1, 8);
-        anatomy[idx].kind = static_cast<CellKind>(kind_dist(g_rng));
-    }
-
-    if (dist(g_rng) < rate && anatomy.size() > 1) {
-        std::uniform_int_distribution<size_t> idx_dist(0, anatomy.size() - 1);
-        size_t idx = idx_dist(g_rng);
-        if (!(anatomy[idx].local_pos.q == 0 && anatomy[idx].local_pos.r == 0)) {
-            anatomy.erase(anatomy.begin() + idx);
-        }
-    }
-
-    if (dist(g_rng) < rate) {
-        std::uniform_int_distribution<size_t> idx_dist(0, anatomy.size() - 1);
-        size_t idx = idx_dist(g_rng);
-        std::uniform_int_distribution<int> dir_dist(0, 5);
-        HexDirection dir = static_cast<HexDirection>(dir_dist(g_rng));
-        HexCoord new_pos = hex_neighbor(anatomy[idx].local_pos, dir);
+    
+    // Total probability of any anatomy mutation
+    if (dist(g_rng) < config.mutation_rate) {
+        float roll = dist(g_rng);
+        float add_limit = config.mutation_add_prob;
+        float remove_limit = add_limit + config.mutation_remove_prob;
+        float change_limit = remove_limit + config.mutation_change_prob;
+        float total = change_limit;
         
-        bool occupied = false;
-        for (const auto& c : anatomy) {
-            if (c.local_pos == new_pos) { occupied = true; break; }
+        // Normalize roll if needed, or just use absolute probabilities
+        roll *= total;
+
+        // Change Kind
+        if (roll < change_limit && roll >= remove_limit && !anatomy.empty()) {
+            std::uniform_int_distribution<size_t> idx_dist(0, anatomy.size() - 1);
+            size_t idx = idx_dist(g_rng);
+            std::uniform_int_distribution<int> kind_dist(1, static_cast<int>(CellKind::Poison));
+            anatomy[idx].kind = static_cast<CellKind>(kind_dist(g_rng));
         }
-        if (!occupied) {
-            std::uniform_int_distribution<int> kind_dist(1, 8);
-            anatomy.push_back({new_pos, static_cast<CellKind>(kind_dist(g_rng))});
+        // Remove Cell
+        else if (roll < remove_limit && roll >= add_limit && anatomy.size() > 1) {
+            std::uniform_int_distribution<size_t> idx_dist(0, anatomy.size() - 1);
+            size_t idx = idx_dist(g_rng);
+            // Don't remove the core cell at (0,0)
+            if (!(anatomy[idx].local_pos.q == 0 && anatomy[idx].local_pos.r == 0)) {
+                anatomy.erase(anatomy.begin() + idx);
+            }
+        }
+        // Add Cell
+        else if (roll < add_limit && !anatomy.empty()) {
+            std::uniform_int_distribution<size_t> idx_dist(0, anatomy.size() - 1);
+            size_t idx = idx_dist(g_rng);
+            std::uniform_int_distribution<int> dir_dist(0, 5);
+            HexDirection dir = static_cast<HexDirection>(dir_dist(g_rng));
+            HexCoord new_pos = hex_neighbor(anatomy[idx].local_pos, dir);
+            
+            bool occupied = false;
+            for (const auto& c : anatomy) {
+                if (c.local_pos == new_pos) { occupied = true; break; }
+            }
+            if (!occupied) {
+                std::uniform_int_distribution<int> kind_dist(1, static_cast<int>(CellKind::Poison));
+                anatomy.push_back({new_pos, static_cast<CellKind>(kind_dist(g_rng))});
+            }
         }
     }
-    brain.mutate(rate);
+
+    brain.mutate(config);
 }
 
 float Genome::distance(const Genome& other) const {
